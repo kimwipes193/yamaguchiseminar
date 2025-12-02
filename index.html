@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ヤマグチゼミ | AI & Data</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- フォント定義 --- */
+    @font-face { font-family: 'Senobi Gothic'; src: url('font/Senobi-Gothic-Bold.woff2') format('woff2'); }
+    @font-face { font-family: 'Barmo'; src: url('font/barmo-webfont.woff2') format('woff2'); }
+    @font-face { font-family: 'Dela Gothic One'; src: url('font/DelaGothicOne-Regular.woff2') format('woff2'); }
+
+    /* --- 変数定義 --- */
+    :root {
+        --icon-size: clamp(70px, 13vw, 170px);
+    }
+
+    /* --- ベース設定 --- */
+    body {
+        margin: 0;
+        font-family: 'Senobi Gothic', 'M PLUS Rounded 1c', sans-serif;
+        color: #fff;
+        overflow-x: hidden;
+        cursor: none;
+        background-color: #111;
+    }
+
+    /* --- ★1. スライドショー --- */
+    #bg-slideshow {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -3;
+        display: flex;
+        flex-direction: column; 
+        overflow: hidden;
+        opacity: 0.8; 
+        background-color: #000;
+    }
+
+    /* 各行の設定 */
+    .slide-row {
+        flex: 1; 
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* 画像が流れるレール */
+    .slide-track {
+        display: flex;
+        width: max-content; 
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        will-change: transform;
+    }
+
+    /* スライド画像 */
+    .slide-img {
+        height: 100%; 
+        width: auto;
+        aspect-ratio: 4 / 3; 
+        object-fit: cover; 
+        margin: 0;
+        padding: 0;
+        border: none;
+        display: block; 
+    }
+    
+    @keyframes scrollLoop {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); } 
+    }
+
+    /* --- ★2. 透過キャラクター（レスポンシブ修正） --- */
+    .bg-character {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('img/character.png'); 
+        
+        /* PCなどの広い画面設定 */
+        background-size: cover; 
+        background-position: center; 
+        background-repeat: no-repeat;
+        
+        z-index: -2;
+        pointer-events: none;
+    }
+
+    /* --- 以下、既存デザイン --- */
+
+    .frame-group {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 90vw; height: 90vh; z-index: 10; pointer-events: none;
+    }
+    .frame {
+        position: relative; width: 100%; height: 100%;
+        border: 3px solid #fff; border-radius: 30px;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .icon-container {
+        position: absolute; top: 0; right: 0;
+        width: var(--icon-size); height: var(--icon-size);
+        z-index: 50; pointer-events: auto;
+        border-top-right-radius: 27px; border-bottom-left-radius: 30px;
+        overflow: hidden;
+        border-left: 3px solid rgba(255,255,255,0.9);
+        border-bottom: 3px solid rgba(255,255,255,0.9);
+        background: #fff;
+    }
+    .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
+    .icon-container:hover .icon-image { transform: scale(1.1); }
+
+    .speech-bubble {
+        position: absolute; top: -35px; right: calc(var(--icon-size) - 40px);
+        background: #fff; color: #333;
+        padding: clamp(10px, 1.5vw, 15px) clamp(20px, 2.5vw, 25px);
+        font-size: clamp(12px, 1.3vw, 15px);
+        border-radius: 30px;
+        font-family: 'Barmo', sans-serif; font-weight: bold;
+        white-space: nowrap; width: auto; min-width: 20px;
+        pointer-events: auto; z-index: 60;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        display: flex; justify-content: center; align-items: center;
+        will-change: transform; animation: floatBubble 3s ease-in-out infinite;
+    }
+    .speech-bubble::after {
+        content: ''; position: absolute; bottom: -13px; right: 30px;
+        border-style: solid; border-width: 15px 0 0 15px; border-color: #fff transparent transparent transparent;
+    }
+    .typing-cursor { display: inline-block; width: 2px; height: 1em; background-color: #333; margin-left: 2px; animation: blinkCursor 0.8s infinite; vertical-align: middle; }
+    @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    @keyframes floatBubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    .frame-header {
+        position: absolute; top: 0; left: 0; width: 100%;
+        padding: 30px calc(var(--icon-size) + 30px) 30px 40px;
+        box-sizing: border-box;
+        display: flex; justify-content: space-between; align-items: flex-start;
+        pointer-events: auto; z-index: 20;
+    }
+    .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
+    .logo { font-size: max(40px, 4vw); margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; }
+    .sub-logo { font-family: 'Barmo', sans-serif; font-size: max(12px, 1vw); margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; }
+    
+    .header-nav ul { display: flex; gap: 2vw; list-style: none; margin: 0; padding: 0; }
+    .header-nav a { text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; transition: color 0.3s; }
+    .header-nav a:hover { color: #f9c74f; }
+    .nav-main { font-family: 'Barmo', sans-serif; font-weight: bold; font-size: max(14px, 1.1vw); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); white-space: nowrap; }
+    .nav-sub { display: block; font-size: 0.7vw; text-align: center; margin-top: 4px; opacity: 0.9; }
+
+    .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 23px; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; }
+    .scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
+    .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
+
+    .catch-copy { position: absolute; bottom: 40px; right: 40px; text-align: right; font-family: 'Dela Gothic One', sans-serif; font-size: max(40px, 6vw); color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); }
+    .catch-copy p { margin: 0; }
+    .catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
+
+    #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FF4291; z-index: 9999; display: flex; justify-content: center; align-items: center; color: white; }
+    .loading-container { position: relative; padding: 60px 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .loading-border-draw {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        border: 4px solid #fff; border-radius: 20px; box-sizing: border-box;
+        mask: conic-gradient(from 180deg at 50% 50%, #000 0%, #000 var(--p, 0%), transparent var(--p, 0%), transparent 100%);
+        -webkit-mask: conic-gradient(from 180deg at 50% 50%, #000 0%, #000 var(--p, 0%), transparent var(--p, 0%), transparent 100%);
+        will-change: mask-image; 
+    }
+    .loading-content { position: relative; z-index: 2; text-align: center; }
+    .loading-title { font-family: 'Senobi Gothic', sans-serif; font-size: 40px; margin: 0; letter-spacing: 0.1em; text-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .loading-subtitle { font-family: 'Barmo', sans-serif; font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; opacity: 0.9; }
+    .loading-status-box { margin-top: 30px; font-family: 'Roboto Mono', monospace; font-size: 18px; font-weight: bold; letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px; }
+    .blinking-cursor { display: inline-block; width: 10px; height: 18px; background-color: #fff; animation: blink 1s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .cursor {
+        position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+        background: rgba(255,255,255,0.8); border: 2px solid #FF4291; border-radius: 50%;
+        pointer-events: none; z-index: 10000; transform: translate3d(-50%, -50%, 0); will-change: transform;
+    }
+    .click-effect {
+        position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+        border: 3px solid #FF4291; border-radius: 50%; pointer-events: none; z-index: 9999;
+        transform: translate3d(-50%, -50%, 0) scale(0); opacity: 0; transition: transform 0.4s ease-out, opacity 0.4s;
+    }
+
+    @media screen and (max-width: 900px) {
+        /* ★修正：スマホでのキャラクター表示 */
+        .bg-character {
+            /* 画面内に収める */
+            background-size: contain; 
+            /* 顔（右側）を中心に持ってくる */
+            background-position: 80% center; 
+        }
+
+        .frame-header { padding: 20px; gap: 15px; padding-right: calc(var(--icon-size) + 20px); flex-direction: column; align-items: flex-start; }
+        .logo { font-size: max(48px, 8vw); } .sub-logo { font-size: max(13px, 2.2vw); }
+        .header-nav ul { gap: 10px; flex-wrap: wrap; }
+        .header-nav a { font-size: max(14px, 2.5vw); } .nav-sub { display: none; }
+        .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
+        .loading-container { padding: 40px 60px; } .loading-title { font-size: 28px; }
+    }
+    @media screen and (max-width: 480px) {
+        /* スマホ縦持ち用 */
+        .bg-character {
+            background-size: 150%; /* 少し拡大して迫力を出す */
+            background-position: 70% bottom; /* 顔の位置を微調整 */
+        }
+
+        .frame-group { width: 94vw; height: 94vh; }
+        .frame-header { padding: 15px; padding-right: calc(var(--icon-size) + 10px); }
+        .speech-bubble { display: none; }
+        .logo { font-size: max(50px, 18vw); }
+        .header-nav a { font-size: 15px; padding: 4px; }
+        .scroll-down { width: 40px; height: 120px; }
+        .catch-copy { font-size: 10vw; bottom: 20px; right: 15px; }
+        .loading-container { padding: 30px 40px; width: 70%; }
+        .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
+        
+        #bg-slideshow { gap: 0; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="bg-slideshow"></div>
+  <div class="bg-character"></div>
+  
+  <div id="loading-screen">
+    <div class="loading-container">
+      <div class="loading-border-draw" id="loading-border"></div>
+      <div class="loading-content">
+        <h1 class="loading-title">ヤマグチゼミ</h1>
+        <p class="loading-subtitle">DATA SCIENCE & AI LAB</p>
+        <div class="loading-status-box">
+          <span>LOADING</span>
+          <span id="loading-percentage">0%</span>
+          <span class="blinking-cursor"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-group">
+    <div class="frame">
+      <div class="speech-bubble">
+          <span id="typing-text"></span><span class="typing-cursor"></span>
+      </div>
+      <div class="icon-container">
+         <img src="img/your-icon.jpg" alt="icon" class="icon-image" onerror="this.style.display='none'">
+      </div>
+      <header class="frame-header">
+        <div class="header-logo">
+          <h1 class="logo">ヤマグチゼミ</h1>
+          <p class="sub-logo">SEMINAR WEBSITE</p>
+        </div>
+        <nav class="header-nav">
+          <ul>
+            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
+            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
+            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
+            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
+          </ul>
+        </nav>
+      </header>
+      <div class="catch-copy">
+        <p class="first"><span class="highlight">常識</span> に</p>
+        <p>噛みつけ。</p>
+      </div>
+      <div class="scroll-down" id="scroll-window">
+        <span class="scroll-text">SCROLL DOWN</span>
+         <div class="dots">
+           <div class="dot yellow"></div>
+           <div class="dot blue"></div>
+           <div class="dot red"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="click-effect"></div>
+  <div class="cursor"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // ★設定エリア：写真リスト
+        const slidePhotos = [
+            '20220610_IMG_0502の一部.jpg',
+            '20240409_140842.jpg',
+            '20240409_141055.jpg',
+            '20240409_162116.jpg',
+            '20240409_162159.jpg',
+            '20240409_162405.jpg',
+            '20240409_162836.jpg',
+            '20240409_162853.jpg',
+            '20240409_162858.jpg',
+            '20240409_163824.jpg',
+            '20240409_163917.jpg',
+            '20240409_164031.jpg',
+            '20240409_164053.jpg',
+            '20240409_164236.jpg',
+            '20240416_155234.jpg',
+            '20240528_140127.jpg',
+            '20240528_140135.jpg',
+            '20240623_114145.jpg',
+            '20240705_183653.jpg',
+            '20240705_201405.jpg'
+        ];
+        
+        // --- 1. 背景スライドショー ---
+        const bgContainer = document.getElementById('bg-slideshow');
+        
+        const isMobile = window.innerWidth < 900;
+        const ROW_COUNT = isMobile ? 12 : 8; 
+        const duration = isMobile ? 500 : 300;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        if (slidePhotos.length > 0) {
+            for (let i = 0; i < ROW_COUNT; i++) {
+                const row = document.createElement('div');
+                row.className = 'slide-row';
+                const track = document.createElement('div');
+                track.className = 'slide-track';
+                
+                if (i % 2 !== 0) track.style.animationDirection = 'reverse';
+                
+                const finalDuration = duration + Math.random() * 50;
+                track.style.animationDuration = `${finalDuration}s`;
+                track.style.animationName = 'scrollLoop';
+
+                const rowImages = shuffle([...slidePhotos]); 
+                const displayImages = [...rowImages, ...rowImages, ...rowImages]; 
+
+                displayImages.forEach(filename => {
+                    const img = document.createElement('img');
+                    img.src = `slide/${filename}`;
+                    img.className = 'slide-img';
+                    img.alt = 'slide image';
+                    img.onerror = () => { img.style.display = 'none'; };
+                    track.appendChild(img);
+                });
+
+                row.appendChild(track);
+                bgContainer.appendChild(row);
+            }
+        }
+
+        // --- 2. ローディング ---
+        const loadingScreen = document.getElementById("loading-screen");
+        const loadingPercentage = document.getElementById("loading-percentage");
+        const loadingBorder = document.getElementById("loading-border");
+
+        if (loadingScreen && loadingPercentage && loadingBorder) {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 2;
+                if (progress > 100) progress = 100;
+                loadingPercentage.textContent = progress + "%";
+                loadingBorder.style.setProperty('--p', progress + '%');
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    if (typeof gsap !== 'undefined') {
+                        setTimeout(() => {
+                             gsap.to(loadingScreen, { opacity: 0, duration: 0.8, onComplete: () => {
+                                 loadingScreen.style.display = "none";
+                                 startTypewriter();
+                             }});
+                             gsap.from(".catch-copy", { opacity: 0, y: 50, duration: 1, delay: 0.5 });
+                        }, 200);
+                    } else {
+                        loadingScreen.style.display = "none";
+                        startTypewriter();
+                    }
+                }
+            }, 40);
+        }
+        
+        // --- 3. タイプライター ---
+        const typingTextSpan = document.getElementById('typing-text');
+        const normalPhrases = [
+            "エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！",
+            "データで未来を予測する", "お菓子パーティもあるよ", "本気で学びたい人、募集"
+        ];
+        const rarePhrases = [
+            "君の入ゼミを待っていた！", "SSR：教授のスマイル", "隠しコマンド...はないよ", "今日のラッキーカラーはピンク！"
+        ];
+        let currentPhrase = "", charIndex = 0;
+
+        function startTypewriter() { if (!typingTextSpan) return; typeNextPhrase(); }
+
+        function getNextPhrase() {
+            if (Math.random() < 0.05) return rarePhrases[Math.floor(Math.random() * rarePhrases.length)];
+            let candidatePhrases = [...normalPhrases];
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const hour = now.getHours();
+            if (month === 1 && date <= 7) candidatePhrases.push("あけましておめでとう！", "今年もよろしくね");
+            if (month === 12 && (date === 24 || date === 25)) candidatePhrases.push("メリークリスマス！");
+            if (hour >= 23 || hour <= 4) candidatePhrases.push("こんな夜遅くにありがとう…", "夜更かしはほどほどにね");
+            if (hour >= 5 && hour <= 9) candidatePhrases.push("おはよう！早起きだね");
+            return candidatePhrases[Math.floor(Math.random() * candidatePhrases.length)];
+        }
+
+        function typeNextPhrase() {
+            currentPhrase = getNextPhrase();
+            charIndex = 0;
+            typingTextSpan.textContent = ""; 
+            typeLoop();
+        }
+
+        function typeLoop() {
+            if (charIndex < currentPhrase.length) {
+                typingTextSpan.textContent += currentPhrase.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeLoop, 40);
+            } else {
+                setTimeout(typeNextPhrase, 6000);
+            }
+        }
+
+        // --- 4. カーソル ---
+        const cursor = document.querySelector(".cursor");
+        let mouseX = -100, mouseY = -100; 
+        window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function updateCursor() {
+            if (cursor) cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+
+        document.addEventListener("click", (e) => {
+            const effect = document.querySelector(".click-effect");
+            if(effect){
+                effect.style.left = '0'; effect.style.top = '0';
+                effect.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%) scale(1.5)`; 
+                effect.style.opacity = "1";
+                setTimeout(() => { 
+                    effect.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%) scale(0)`; 
+                    effect.style.opacity = "0"; 
+                }, 300);
+            }
+        });
+    });
+  </script>
+</body>
+</html>
