@@ -1,0 +1,180 @@
+/* --- フォント定義（パス修正：font/ファイル名） --- */
+@font-face { font-family: 'Senobi Gothic'; src: url('font/Senobi-Gothic-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'Barmo'; src: url('font/barmo-webfont.woff2') format('woff2'); }
+@font-face { font-family: 'Dela Gothic One'; src: url('font/DelaGothicOne-Regular.woff2') format('woff2'); }
+/* 予備のWebフォント */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap');
+
+/* --- ベース設定 --- */
+body {
+    margin: 0;
+    font-family: 'Senobi Gothic', sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+    cursor: none;
+    background-color: #ffcae0;
+}
+
+/* 背景画像（パス修正：img/cover.jpg） */
+.bg-image {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('img/cover.jpg'); /* ここを修正しました */
+    background-size: cover; background-position: center;
+    z-index: -2;
+}
+/* AIパーティクル */
+#popNetworkCanvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; opacity: 0.5; mix-blend-mode: overlay;
+}
+
+/* --- 白枠フレーム --- */
+.frame-group {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw; height: 90vh;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.frame {
+    position: relative;
+    width: 100%; height: 100%;
+    border: 3px solid #fff; /* 枠線の太さ */
+    border-radius: 30px;    /* 枠線の角丸 */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* --- アイコン（右上固定・合体修正版） --- */
+.icon-container {
+    position: absolute;
+    top: 0;      /* 上端に合わせる */
+    right: 0;    /* 右端に合わせる */
+    width: 120px;  /* アイコンの大きさ */
+    height: 120px;
+    z-index: 50;
+    pointer-events: auto;
+    
+    /* 【重要】角の合体処理 */
+    /* 白枠の角丸(30px) - 線の太さ(3px) = 27px */
+    border-top-right-radius: 27px; 
+    border-bottom-left-radius: 20px;
+    overflow: hidden; /* 画像のはみ出しをカット */
+    
+    /* 境界線（白枠と馴染ませる） */
+    border-left: 2px solid rgba(255,255,255,0.8);
+    border-bottom: 2px solid rgba(255,255,255,0.8);
+    background: #fff;
+}
+
+.icon-image {
+    width: 100%; height: 100%;
+    object-fit: cover; /* 画像を変形させずに埋める */
+}
+
+/* --- ヘッダー --- */
+.frame-header {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    /* 右側にアイコン分のスペース(120px + 余白)を確保 */
+    padding: 30px 140px 30px 40px; 
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: auto;
+    z-index: 20;
+}
+
+/* ロゴ */
+.header-logo { flex-shrink: 0; }
+.logo {
+    font-size: 4vw; margin: 0; line-height: 1;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+.sub-logo {
+    font-family: 'Barmo', sans-serif; font-size: 1vw; margin-top: 5px; letter-spacing: 0.1em;
+}
+
+/* ナビゲーション */
+.header-nav ul {
+    display: flex; gap: 2vw; list-style: none; margin: 0; padding: 0;
+}
+.header-nav a {
+    text-decoration: none; color: #fff; font-family: 'Barmo', sans-serif;
+    font-weight: bold; font-size: 1.1vw; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    white-space: nowrap;
+}
+.header-nav a:hover { color: #f9c74f; }
+.nav-desc { display: block; font-size: 0.7vw; text-align: center; margin-top: 4px; opacity: 0.9; }
+
+/* --- スクロールダウン --- */
+.scroll-down {
+    position: absolute; bottom: 0; left: 0;
+    width: 60px; height: 160px;
+    background: #fff; color: #333;
+    border-radius: 0 30px 0 23px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    pointer-events: auto;
+}
+.scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
+.dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
+
+/* --- キャッチコピー --- */
+.catch-copy {
+    position: fixed; bottom: 12%; right: 8%; text-align: right;
+    font-family: 'Dela Gothic One', sans-serif; font-size: 6vw;
+    color: #fff; z-index: 5; line-height: 1.2;
+    text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6);
+}
+.catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
+
+/* --- その他 --- */
+.loading-title { font-size: 3vw; margin: 0; }
+#loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FF4291; z-index: 9999; display: flex; justify-content: center; align-items: center; color: white;}
+.loading-frame { border: 3px solid white; border-radius: 20px; padding: 40px; text-align: center; }
+.cursor { position: fixed; width: 20px; height: 20px; background: rgba(255,255,255,0.8); border: 2px solid #FF4291; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10000; }
+.click-effect { position: fixed; width: 40px; height: 40px; border: 3px solid #FF4291; border-radius: 50%; transform: translate(-50%, -50%) scale(0); pointer-events: none; z-index: 9999; transition: transform 0.4s ease-out, opacity 0.4s; }
+
+/* =========================================
+   レスポンシブ対応
+   ========================================= */
+@media screen and (max-width: 900px) {
+    /* アイコンを少し小さくする */
+    .icon-container {
+        width: 80px; height: 80px;
+    }
+    
+    .frame-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 15px;
+        /* 右余白を調整（アイコンサイズ80px + 余白） */
+        padding-right: 100px; 
+    }
+    
+    .logo { font-size: 8vw; }
+    .sub-logo { font-size: 2.5vw; }
+    
+    .header-nav ul { gap: 10px; flex-wrap: wrap; }
+    .header-nav a { font-size: 2.5vw; }
+    .nav-desc { display: none; } 
+
+    .catch-copy { font-size: 9vw; bottom: 18%; }
+}
+
+@media screen and (max-width: 480px) {
+    .frame-group { width: 94vw; height: 94vh; }
+    .frame-header { padding: 15px; padding-right: 70px; }
+    
+    .icon-container { width: 60px; height: 60px; }
+
+    .logo { font-size: 10vw; }
+    .header-nav a { font-size: 3.2vw; padding: 4px; }
+    .scroll-down { width: 40px; height: 120px; }
+}
