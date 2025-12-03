@@ -101,7 +101,7 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し */
+    /* 吹き出し（PC用） */
     .speech-bubble {
         position: absolute; 
         top: -50px; 
@@ -126,7 +126,7 @@
     @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     @keyframes floatBubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    /* ヘッダー */
+    /* ヘッダー（PC用） */
     .frame-header {
         position: absolute; top: 0; left: 0; width: 100%;
         padding: 30px calc(var(--icon-size) + 80px) 30px 40px;
@@ -232,7 +232,7 @@
     }
 
     /* =========================================
-       ★レスポンシブ対応（スマホ）
+       ★レスポンシブ対応（スマホ修正）
        ========================================= */
     @media screen and (max-width: 900px) {
         .bg-character {
@@ -249,13 +249,16 @@
             flex-direction: column; align-items: flex-start; gap: 10px;
         }
 
-        .logo { font-size: 63px; letter-spacing: -0.1em; } 
-        .sub-logo { font-size: 20px; margin-left: 0; }
+        /* ★修正：タイトルを1行に収めるためサイズ調整 */
+        .logo { 
+            font-size: 11vw; /* 画面幅に応じたサイズに変更 */
+            letter-spacing: -0.1em; 
+        } 
+        .sub-logo { font-size: 3.5vw; margin-left: 0; }
 
-        .header-nav { position: absolute; top: 45%; left: 0; width: 100%; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 55; }
-        .header-nav ul { flex-direction: column; align-items: flex-start; gap: 25px; padding-left: 40px; }
-        .header-nav a { font-size: 28px; align-items: flex-start; text-shadow: 2px 2px 0 #000; }
-        .nav-sub { font-size: 14px; display: block; }
+        .header-nav ul { gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+        .header-nav a { font-size: 14px; align-items: flex-start; }
+        .nav-sub { font-size: 11px; display: block; }
 
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; }
         .hamburger-btn { display: flex; }
@@ -267,14 +270,25 @@
             padding: 8px 15px;
             font-size: 10px;
         }
+        
+        /* ★修正：尻尾の形と位置（下向き三角形） */
         .speech-bubble::after {
-            top: auto; bottom: -8px; right: 20px; left: 50%;
-            border-width: 12px 12px 0 0; border-color: #fff transparent transparent transparent;
-            transform: translateX(-50%) scaleX(-1);
+            top: auto; 
+            bottom: -8px; /* 吹き出しの下 */
+            left: 50%;    /* 中央 */
+            right: auto;
+            
+            /* 下向きの三角形を作成 */
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #fff;
+            border-bottom: none;
+            
+            /* 中央揃え */
+            transform: translateX(-50%);
         }
 
-        /* ★修正：キャッチコピー（0.8倍に縮小） */
-        .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; } /* 13.5vw * 0.8 */
+        .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; }
         
         .loading-container { width: 100%; } 
         .loading-title { font-size: 28px; }
@@ -286,8 +300,9 @@
         .loading-border-draw.expand { width: 90vw; height: 88vh; }
         .frame-header { padding: 15px; padding-right: 80px; }
         
-        .logo { font-size: 48px; }
-        .sub-logo { font-size: 17px; }
+        /* ★修正：小型スマホでも1行に */
+        .logo { font-size: 12vw; }
+        .sub-logo { font-size: 4vw; }
         
         .header-nav a { font-size: 13px; }
         .nav-sub { font-size: 10px; }
@@ -295,10 +310,7 @@
         .icon-container { width: 70px; height: 70px; }
         .speech-bubble { top: -20px; right: 15px; }
         .scroll-down { width: 40px; height: 120px; }
-        
-        /* ★修正：キャッチコピー（0.8倍に縮小） */
-        .catch-copy { font-size: 12vw; bottom: 20px; right: 80px; } /* 15vw * 0.8 */
-        
+        .catch-copy { font-size: 12vw; bottom: 20px; right: 80px; }
         .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
         #bg-slideshow { gap: 0; }
     }
@@ -495,20 +507,6 @@
                 }
             }, 40);
         }
-
-        const menuBtn = document.getElementById('menu-btn');
-        if(menuBtn) {
-            menuBtn.addEventListener('click', () => {
-                document.body.classList.toggle('menu-open');
-            });
-        }
-
-        const navLinks = document.querySelectorAll('.header-nav a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                document.body.classList.remove('menu-open');
-            });
-        });
         
         const typingTextSpan = document.getElementById('typing-text');
         const normalPhrases = [
