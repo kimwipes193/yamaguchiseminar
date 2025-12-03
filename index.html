@@ -5,35 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ヤマグチゼミ | AI & Data</title>
   
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* --- フォント定義（ファイル名を厳密に指定） --- */
-    
-    /* Senobi Gothic Bold */
-    @font-face {
-      font-family: 'Senobi Gothic';
-      /* 画像のファイル名に合わせて修正 */
-      src: url('font/Senobi-Gothic-Bold.woff2') format('woff2');
-      font-display: swap;
+    /* --- フォント定義（★修正：フォルダ名を 'fonts' に統一） --- */
+    @font-face { 
+      font-family: 'Senobi Gothic'; 
+      src: url('fonts/Senobi-Gothic-Bold.woff2') format('woff2'); 
     }
-
-    /* Barmo */
-    @font-face {
-      font-family: 'Barmo';
-      /* 画像のファイル名に合わせて修正 */
-      src: url('font/barmo-webfont.woff2') format('woff2');
-      font-display: swap;
+    @font-face { 
+      font-family: 'Barmo'; 
+      src: url('fonts/barmo-webfont.woff2') format('woff2'); 
     }
-
-    /* Dela Gothic One (ローカル用バックアップ) */
-    @font-face {
-      font-family: 'Dela Gothic One Local';
-      /* 画像のファイル名に合わせて修正 */
-      src: url('font/DelaGothicOne-Regular.woff2') format('woff2');
-      font-display: swap;
+    @font-face { 
+      font-family: 'Dela Gothic One'; 
+      src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); 
     }
 
     /* --- 変数定義 --- */
@@ -44,7 +30,6 @@
     /* --- ベース設定 --- */
     body {
         margin: 0;
-        /* フォントの優先順位を指定 */
         font-family: 'Senobi Gothic', 'M PLUS Rounded 1c', sans-serif;
         color: #fff;
         overflow-x: hidden;
@@ -89,9 +74,10 @@
     .slide-img {
         height: 100%; 
         width: auto;
-        /* 4:3比率 */
-        aspect-ratio: 4 / 3; 
+        
+        /* 隙間なく埋める */
         object-fit: cover; 
+        
         margin: 0;
         padding: 0;
         border: none;
@@ -113,7 +99,8 @@
         pointer-events: none;
     }
 
-    /* --- フレーム --- */
+    /* --- 以下、既存デザイン --- */
+
     .frame-group {
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 90vw; height: 90vh; z-index: 10; pointer-events: none;
@@ -124,7 +111,6 @@
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
     }
 
-    /* --- アイコン --- */
     .icon-container {
         position: absolute; top: 0; right: 0;
         width: var(--icon-size); height: var(--icon-size);
@@ -138,7 +124,6 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* --- 吹き出し --- */
     .speech-bubble {
         position: absolute; top: -35px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
@@ -160,7 +145,6 @@
     @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     @keyframes floatBubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    /* --- ヘッダー --- */
     .frame-header {
         position: absolute; top: 0; left: 0; width: 100%;
         padding: 30px calc(var(--icon-size) + 30px) 30px 40px;
@@ -184,18 +168,10 @@
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
-    /* ★修正：Google FontsのDela Gothic Oneを優先使用 */
-    .catch-copy { 
-        position: absolute; bottom: 40px; right: 40px; text-align: right; 
-        font-family: 'Dela Gothic One', 'Dela Gothic One Local', sans-serif; 
-        font-size: max(40px, 6vw); 
-        color: #fff; z-index: 5; line-height: 0.9; 
-        text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); 
-    }
+    .catch-copy { position: absolute; bottom: 40px; right: 40px; text-align: right; font-family: 'Dela Gothic One', sans-serif; font-size: max(40px, 6vw); color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); }
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
 
-    /* --- ロード画面 --- */
     #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FF4291; z-index: 9999; display: flex; justify-content: center; align-items: center; color: white; }
     .loading-container { position: relative; padding: 60px 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .loading-border-draw {
@@ -212,7 +188,6 @@
     .blinking-cursor { display: inline-block; width: 10px; height: 18px; background-color: #fff; animation: blink 1s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    /* カーソル */
     .cursor {
         position: fixed; top: 0; left: 0; width: 20px; height: 20px;
         background: rgba(255,255,255,0.8); border: 2px solid #FF4291; border-radius: 50%;
@@ -224,14 +199,12 @@
         transform: translate3d(-50%, -50%, 0) scale(0); opacity: 0; transition: transform 0.4s ease-out, opacity 0.4s;
     }
 
-    /* レスポンシブ */
     @media screen and (max-width: 900px) {
         .bg-character { background-size: contain; background-position: 80% center; }
         .frame-header { padding: 20px; gap: 15px; padding-right: calc(var(--icon-size) + 20px); flex-direction: column; align-items: flex-start; }
         .logo { font-size: max(48px, 8vw); } .sub-logo { font-size: max(13px, 2.2vw); }
         .header-nav ul { gap: 10px; flex-wrap: wrap; }
-        .header-nav a { font-size: max(14px, 2.5vw); } 
-        .nav-sub { display: block; font-size: 10px; }
+        .header-nav a { font-size: max(14px, 2.5vw); } .nav-sub { display: block; font-size: 10px; }
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
         .loading-container { padding: 40px 60px; } .loading-title { font-size: 28px; }
     }
@@ -286,10 +259,30 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
-            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
-            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
-            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
+            <li>
+                <a href="#about-us">
+                    <span class="nav-main">ABOUT US</span>
+                    <span class="nav-sub">私たちのこと</span>
+                </a>
+            </li>
+            <li>
+                <a href="#member">
+                    <span class="nav-main">MEMBER</span>
+                    <span class="nav-sub">ゼミ生紹介</span>
+                </a>
+            </li>
+            <li>
+                <a href="#activity">
+                    <span class="nav-main">ACTIVITY JOURNAL</span>
+                    <span class="nav-sub">活動記録</span>
+                </a>
+            </li>
+            <li>
+                <a href="#contact">
+                    <span class="nav-main">INQUIRY</span>
+                    <span class="nav-sub">お問い合わせ</span>
+                </a>
+            </li>
           </ul>
         </nav>
       </header>
