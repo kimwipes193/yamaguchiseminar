@@ -53,7 +53,7 @@
         100% { transform: translateX(-50%); } 
     }
 
-    /* --- 透過キャラクター --- */
+    /* --- 透過キャラクター（デフォルトPC設定） --- */
     .bg-character {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: url('img/character.png'); 
@@ -75,7 +75,7 @@
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
     }
 
-    /* アイコン */
+    /* --- アイコン --- */
     .icon-container {
         position: absolute; top: 0; right: 0;
         width: var(--icon-size); height: var(--icon-size);
@@ -89,7 +89,7 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し（PC用デフォルト位置） */
+    /* --- 吹き出し（PC用） --- */
     .speech-bubble {
         position: absolute; top: -35px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
@@ -130,7 +130,6 @@
     .nav-main { font-family: 'Barmo', sans-serif; font-weight: bold; font-size: max(14px, 1.1vw); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); white-space: nowrap; }
     .nav-sub { display: block; font-size: 0.7vw; text-align: center; margin-top: 4px; opacity: 0.9; }
 
-    /* スクロールダウン */
     .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 23px; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; }
     .scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
     .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
@@ -173,55 +172,60 @@
        ★レスポンシブ対応（スマホ修正）
        ========================================= */
     @media screen and (max-width: 900px) {
-        /* 背景画像：繰り返しなし、顔（右側）を中心に配置 */
+        /* ★1. 背景画像：顔を中心に持ってくる */
         .bg-character {
             background-repeat: no-repeat;
             background-size: cover;
-            background-position: 85% center; /* 85%右寄りに設定して顔を入れる */
+            /* 左から82%の位置（＝ほぼ右端）を中心にする */
+            background-position: 82% center; 
         }
 
-        /* フレームサイズ：縦を少し縮める */
-        .frame-group { width: 92vw; height: 85vh; }
+        /* ★2. 白枠サイズ：画面いっぱいになりすぎないよう調整 */
+        .frame-group { 
+            width: 88vw; 
+            height: 80vh; /* 少し短く */
+        }
 
         /* ヘッダーレイアウト */
         .frame-header {
             padding: 20px;
+            /* アイコンの左側にタイトルが来るように右余白確保 */
             padding-right: 90px;
             flex-direction: column; 
             align-items: flex-start;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .logo { font-size: 28px; } 
+        /* タイトル・メニューを小さくして収める */
+        .logo { font-size: 24px; } 
         .sub-logo { font-size: 10px; margin-left: 0; }
-
-        /* メニュー */
         .header-nav ul { gap: 8px; flex-wrap: wrap; margin-top: 5px; }
-        .header-nav a { font-size: 11px; align-items: flex-start; }
+        .header-nav a { font-size: 10px; align-items: flex-start; }
         .nav-sub { font-size: 9px; }
 
-        /* アイコン：0,0に固定して角を合体させる */
+        /* ★3. アイコン：白枠の右上角と完全に合体 */
         .icon-container { 
             width: 80px; height: 80px; 
-            top: 0; right: 0; /* これで白枠と合体します */
+            top: 0; right: 0; /* ズレをなくす */
         }
 
-        /* 吹き出し：アイコンの「左上」に配置 */
+        /* ★4. 吹き出し：アイコンの左上へ */
         .speech-bubble {
             display: flex;
-            top: -25px;  /* 枠の上に飛び出させる */
-            right: 90px; /* アイコン(80px)の左隣 */
-            padding: 8px 15px;
+            /* 枠線の上にはみ出させる */
+            top: -20px;  
+            /* アイコン(80px)の左側に配置 */
+            right: 85px; 
+            padding: 6px 12px;
             font-size: 10px;
         }
-        /* ★修正：しっぽの向き修正（右下向き） */
+        /* しっぽ修正：右下向き（アイコンの方へ） */
         .speech-bubble::after {
-            bottom: -8px; /* 吹き出しの下にはみ出させる */
-            right: 15px;  /* 右端から少し内側に配置 */
-            border-width: 8px 8px 0 0; /* 上と右にボーダーを設定 */
-            border-color: #fff transparent transparent transparent; /* 上だけ白、他は透明 */
-            transform: rotate(90deg); /* 90度回転させて右下向きにする */
-            top: auto; /* PC版の設定を打ち消す */
+            bottom: 5px; /* 下寄り */
+            right: -8px; /* 右に出す */
+            border-width: 6px 0 6px 8px; /* 右向き三角 */
+            border-color: transparent transparent transparent #fff;
+            top: auto; /* PC設定のリセット */
         }
 
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
@@ -229,28 +233,26 @@
     }
 
     @media screen and (max-width: 480px) {
-        /* スマホ縦持ち用：さらに顔に寄せる */
+        /* スマホ縦持ち用微調整 */
         .bg-character {
+            /* 顔ドアップが良い場合 */
+            background-size: cover;
             background-position: 80% center; 
         }
 
-        /* 枠サイズさらに調整 */
-        .frame-group { width: 88vw; height: 82vh; }
-
+        .frame-group { width: 90vw; height: 78vh; }
         .frame-header { padding: 15px; padding-right: 80px; }
         
-        .logo { font-size: 24px; }
-        .header-nav a { font-size: 10px; }
-        /* スペース確保のため日本語メニューは非表示にしても良いが、ご希望により表示維持 */
+        .logo { font-size: 22px; }
+        .header-nav a { font-size: 9px; }
         
-        /* アイコン縮小 */
+        /* アイコン微調整 */
         .icon-container { width: 70px; height: 70px; }
         
-        /* 吹き出し位置調整 */
+        /* 吹き出し位置微調整 */
         .speech-bubble { 
-            display: flex;
-            top: -20px;
-            right: 80px; 
+            top: -18px;
+            right: 75px; 
         }
 
         .scroll-down { width: 40px; height: 120px; }
@@ -297,30 +299,10 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li>
-                <a href="#about-us">
-                    <span class="nav-main">ABOUT US</span>
-                    <span class="nav-sub">私たちのこと</span>
-                </a>
-            </li>
-            <li>
-                <a href="#member">
-                    <span class="nav-main">MEMBER</span>
-                    <span class="nav-sub">ゼミ生紹介</span>
-                </a>
-            </li>
-            <li>
-                <a href="#activity">
-                    <span class="nav-main">ACTIVITY JOURNAL</span>
-                    <span class="nav-sub">活動記録</span>
-                </a>
-            </li>
-            <li>
-                <a href="#contact">
-                    <span class="nav-main">INQUIRY</span>
-                    <span class="nav-sub">お問い合わせ</span>
-                </a>
-            </li>
+            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
+            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
+            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
+            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
           </ul>
         </nav>
       </header>
@@ -347,7 +329,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // ★設定エリア：写真リスト
+        // 写真リスト
         const slidePhotos = [
             '20220610_IMG_0502の一部.jpg',
             '20240409_140842.jpg',
@@ -371,11 +353,10 @@
             '20240705_201405.jpg'
         ];
         
-        // --- 1. 背景スライドショー ---
+        // 背景スライドショー
         const bgContainer = document.getElementById('bg-slideshow');
         
         const isMobile = window.innerWidth < 900;
-        // PC: 8行, スマホ: 12行
         const ROW_COUNT = isMobile ? 12 : 8; 
         const duration = isMobile ? 500 : 300;
 
@@ -417,7 +398,7 @@
             }
         }
 
-        // --- 2. ローディング ---
+        // ローディング
         const loadingScreen = document.getElementById("loading-screen");
         const loadingPercentage = document.getElementById("loading-percentage");
         const loadingBorder = document.getElementById("loading-border");
@@ -448,7 +429,7 @@
             }, 40);
         }
         
-        // --- 3. タイプライター ---
+        // タイプライター
         const typingTextSpan = document.getElementById('typing-text');
         const normalPhrases = [
             "エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！",
@@ -492,7 +473,7 @@
             }
         }
 
-        // --- 4. カーソル ---
+        // カーソル
         const cursor = document.querySelector(".cursor");
         let mouseX = -100, mouseY = -100; 
         window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
