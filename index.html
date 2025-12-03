@@ -200,13 +200,13 @@
         .header-nav a { font-size: 11px; align-items: flex-start; }
         .nav-sub { font-size: 9px; }
 
-        /* ★アイコン：0,0に固定して角を合体させる */
+        /* アイコン：0,0に固定して角を合体させる */
         .icon-container { 
             width: 80px; height: 80px; 
             top: 0; right: 0; /* これで白枠と合体します */
         }
 
-        /* ★吹き出し：アイコンの「左上」に配置 */
+        /* 吹き出し：アイコンの「左上」に配置 */
         .speech-bubble {
             display: flex;
             top: -25px;  /* 枠の上に飛び出させる */
@@ -214,12 +214,14 @@
             padding: 8px 15px;
             font-size: 10px;
         }
-        /* しっぽの向き修正（右向き） */
+        /* ★修正：しっぽの向き修正（右下向き） */
         .speech-bubble::after {
-            bottom: 10px; /* 位置微調整 */
-            right: -8px;  /* 右に出す */
-            border-width: 8px 0 8px 10px; /* 右向きの三角形 */
-            border-color: transparent transparent transparent #fff;
+            bottom: -8px; /* 吹き出しの下にはみ出させる */
+            right: 15px;  /* 右端から少し内側に配置 */
+            border-width: 8px 8px 0 0; /* 上と右にボーダーを設定 */
+            border-color: #fff transparent transparent transparent; /* 上だけ白、他は透明 */
+            transform: rotate(90deg); /* 90度回転させて右下向きにする */
+            top: auto; /* PC版の設定を打ち消す */
         }
 
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
