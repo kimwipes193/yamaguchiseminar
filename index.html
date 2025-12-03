@@ -13,9 +13,9 @@
     @font-face { font-family: 'Barmo'; src: url('fonts/barmo-webfont.woff2') format('woff2'); }
     @font-face { font-family: 'Dela Gothic One'; src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); }
 
-    /* --- 変数定義（デスクトップPC基準） --- */
+    /* --- 変数定義 --- */
     :root {
-        /* デスクトップではアイコンも大きく */
+        /* デスクトップ用アイコンサイズ */
         --icon-size: clamp(100px, 15vw, 260px);
     }
 
@@ -74,7 +74,6 @@
     .frame-group {
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 90vw; height: 90vh; z-index: 10; 
-        /* フレーム自体はクリックを通す（重要） */
         pointer-events: none;
         opacity: 0; 
         transition: opacity 0.5s ease;
@@ -94,7 +93,7 @@
         position: absolute; top: 0; right: 0;
         width: var(--icon-size); height: var(--icon-size);
         z-index: 50; 
-        pointer-events: auto; /* アイコンはクリック可能 */
+        pointer-events: auto; 
         border-top-right-radius: 27px; border-bottom-left-radius: 30px;
         overflow: hidden;
         border-left: 3px solid rgba(255,255,255,0.9);
@@ -105,7 +104,7 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し（デスクトップPC用：大きめ） */
+    /* 吹き出し（デスクトップPC用） */
     .speech-bubble {
         position: absolute; 
         top: -65px; 
@@ -133,7 +132,6 @@
     /* ヘッダー（PC用） */
     .frame-header {
         position: absolute; top: 0; left: 0; width: 100%;
-        /* アイコンを避けるための右余白 */
         padding: 30px calc(var(--icon-size) + 80px) 30px 40px;
         box-sizing: border-box;
         display: flex; justify-content: space-between; align-items: flex-start;
@@ -142,19 +140,19 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
-    /* ★修正：デスクトップPC版タイトル（かなり大きく） */
+    /* ★修正1：デスクトップPC版タイトルを大きく */
     .logo { 
-        font-size: clamp(80px, 8.5vw, 150px); /* 最小80px〜最大150px */
+        font-size: max(100px, 8vw); 
         margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
     }
-    /* ★修正：デスクトップPC版サブタイトル（かなり大きく） */
+    /* ★修正1：デスクトップPC版サブタイトルを大きく */
     .sub-logo { 
         font-family: 'Barmo', sans-serif; 
-        font-size: clamp(22px, 1.8vw, 32px); 
+        font-size: max(24px, 1.5vw); 
         margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
     }
     
-    /* PC版メニュー */
+    /* PC版メニュー位置 */
     .header-nav { margin-top: 35px; }
     .header-nav ul { display: flex; gap: 2vw; list-style: none; margin: 0; padding: 0; }
     .header-nav a { text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; transition: color 0.3s; }
@@ -170,13 +168,12 @@
         width: 60px; height: 60px;
         background: #fff;
         border-radius: 30px 0 27px 0; 
-        /* ★修正：最強のz-indexを与えてクリックを保証 */
         z-index: 9999;
         cursor: pointer;
         align-items: center; justify-content: center;
         flex-direction: column;
         gap: 5px;
-        pointer-events: auto; /* ここはクリック可能 */
+        pointer-events: auto;
         border: none;
         outline: none;
     }
@@ -196,13 +193,12 @@
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
-    /* ★修正：デスクトップPC版キャッチコピー（かなり大きく） */
+    /* ★修正1：デスクトップPC版キャッチコピーを大きく */
     .catch-copy { 
         position: absolute; bottom: 40px; right: 40px; text-align: right; 
         font-family: 'Dela Gothic One', sans-serif; 
-        font-size: clamp(60px, 8vw, 140px); /* 最小60px〜最大140px */
+        font-size: max(80px, 6vw); 
         color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; 
-        /* ★重要：透明な部分が重なってもクリックを通す */
         pointer-events: none;
     }
     .catch-copy p { margin: 0; }
@@ -255,19 +251,18 @@
        ★レスポンシブ対応
        ========================================= */
     
-    /* ★修正：ノートパソコン（901px〜1400px）用調整 */
-    /* ここでサイズを小さく上書きして、巨大化を防ぐ */
+    /* ★修正2：ノートパソコン（901px〜1400px）用調整 */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
-        /* アイコンサイズ：かなり控えめに（8vw） */
+        /* アイコンサイズ：ノートPCでは小さくする */
         :root {
-            --icon-size: clamp(80px, 8vw, 120px);
+            --icon-size: clamp(70px, 8vw, 120px);
         }
         
-        /* 吹き出し：小さく */
+        /* 吹き出し：ノートPCでは小さく */
         .speech-bubble {
-            padding: 10px 20px; 
-            font-size: 13px;
-            top: -35px;
+            padding: 10px 15px; 
+            font-size: 12px;
+            top: -40px;
             right: calc(var(--icon-size) - 30px);
         }
         .speech-bubble::after {
@@ -276,19 +271,20 @@
         }
 
         /* タイトル：デスクトップ設定だと大きすぎるのでここで制限 */
-        .logo { font-size: clamp(45px, 5vw, 70px); }
+        .logo { font-size: 50px; }
         .sub-logo { font-size: 16px; margin-left: 20px; }
-        .catch-copy { font-size: clamp(40px, 5vw, 70px); bottom: 30px; right: 30px; }
+        /* キャッチコピー：ノートPC用のサイズ */
+        .catch-copy { font-size: 40px; bottom: 30px; right: 30px; }
         
-        .header-nav { margin-top: 5px; }
+        .header-nav { margin-top: 10px; }
         .frame-header { padding-right: calc(var(--icon-size) + 40px); }
     }
 
     /* スマホ（900px以下） */
     @media screen and (max-width: 900px) {
-        /* スマホ用のアイコンサイズは維持（変数上書きなし） */
+        /* スマホ用のアイコンサイズ（変数上書きなし、固定） */
         :root {
-             --icon-size: 80px; /* 固定値で安定させる */
+             --icon-size: 80px; 
         }
 
         .bg-character {
@@ -305,7 +301,6 @@
             flex-direction: column; align-items: flex-start; gap: 10px;
         }
 
-        /* スマホ版サイズ（0.8倍） */
         .logo { 
             font-size: 50px; 
             letter-spacing: -0.1em; 
@@ -315,10 +310,17 @@
             margin-left: 0; 
         }
 
+        /* スマホではメニューを確実に隠す */
         .header-nav { 
-            position: absolute; top: 45%; left: 0; width: 100%; 
-            opacity: 0; pointer-events: none; visibility: hidden; 
-            transition: opacity 0.5s ease, visibility 0.5s; z-index: 55;
+            position: absolute; 
+            top: 45%; 
+            left: 0; 
+            width: 100%; 
+            opacity: 0; 
+            pointer-events: none; 
+            visibility: hidden; 
+            transition: opacity 0.5s ease, visibility 0.5s; 
+            z-index: 55;
             margin-top: 0; 
         }
         .header-nav ul { flex-direction: column; align-items: flex-start; gap: 25px; padding-left: 40px; }
@@ -335,7 +337,6 @@
             padding: 8px 15px;
             font-size: 10px;
         }
-        /* 尻尾：中央下 */
         .speech-bubble::after {
             top: auto; 
             bottom: -8px; 
@@ -356,7 +357,6 @@
         .loading-border-draw.expand { width: 90vw; height: 88vh; }
         .frame-header { padding: 15px; padding-right: 80px; }
         
-        /* 小型スマホ版（0.8倍） */
         .logo { font-size: 38px; }
         .sub-logo { font-size: 14px; }
         
@@ -385,7 +385,6 @@
         pointer-events: none; 
     }
     
-    /* メニュー背景：マゼンタ */
     body.menu-open .frame { 
         background-color: rgba(255, 66, 145, 0.95) !important; 
     }
