@@ -8,19 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* --- フォント定義（★修正：フォルダ名を 'fonts' に統一） --- */
-    @font-face { 
-      font-family: 'Senobi Gothic'; 
-      src: url('fonts/Senobi-Gothic-Bold.woff2') format('woff2'); 
-    }
-    @font-face { 
-      font-family: 'Barmo'; 
-      src: url('fonts/barmo-webfont.woff2') format('woff2'); 
-    }
-    @font-face { 
-      font-family: 'Dela Gothic One'; 
-      src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); 
-    }
+    /* --- フォント定義 --- */
+    @font-face { font-family: 'Senobi Gothic'; src: url('fonts/Senobi-Gothic-Bold.woff2') format('woff2'); }
+    @font-face { font-family: 'Barmo'; src: url('fonts/barmo-webfont.woff2') format('woff2'); }
+    @font-face { font-family: 'Dela Gothic One'; src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); }
 
     /* --- 変数定義 --- */
     :root {
@@ -37,70 +28,46 @@
         background-color: #111;
     }
 
-    /* --- ★1. スライドショー --- */
+    /* --- スライドショー --- */
     #bg-slideshow {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         z-index: -3;
-        display: flex;
-        flex-direction: column; 
-        overflow: hidden;
-        opacity: 0.8; 
-        background-color: #000;
+        display: flex; flex-direction: column; overflow: hidden;
+        opacity: 0.8; background-color: #000;
     }
-
-    /* 各行の設定 */
     .slide-row {
-        flex: 1; 
-        width: 100%;
-        overflow: hidden;
-        position: relative;
-        display: flex;
-        align-items: center;
-        border: none;
-        margin: 0;
-        padding: 0;
+        flex: 1; width: 100%; overflow: hidden; position: relative;
+        display: flex; align-items: center; border: none; margin: 0; padding: 0;
     }
-
-    /* 画像が流れるレール */
     .slide-track {
-        display: flex;
-        width: max-content; 
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
+        display: flex; width: max-content; 
+        animation-timing-function: linear; animation-iteration-count: infinite;
         will-change: transform;
     }
-
-    /* スライド画像 */
     .slide-img {
-        height: 100%; 
-        width: auto;
-        
-        /* 隙間なく埋める */
-        object-fit: cover; 
-        
-        margin: 0;
-        padding: 0;
-        border: none;
-        display: block; 
+        height: 100%; width: auto; aspect-ratio: 4 / 3; 
+        object-fit: cover; margin: 0; padding: 0; border: none; display: block; 
     }
-    
     @keyframes scrollLoop {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); } 
     }
 
-    /* --- ★2. 透過キャラクター --- */
+    /* --- ★修正：透過キャラクター --- */
     .bg-character {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: url('img/character.png'); 
+        
+        /* PC（基本設定） */
         background-size: cover; 
         background-position: center;
+        background-repeat: no-repeat; /* ★重要：繰り返しを禁止 */
+        
         z-index: -2;
         pointer-events: none;
     }
 
-    /* --- 以下、既存デザイン --- */
-
+    /* --- フレーム --- */
     .frame-group {
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 90vw; height: 90vh; z-index: 10; pointer-events: none;
@@ -111,6 +78,7 @@
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
     }
 
+    /* アイコン */
     .icon-container {
         position: absolute; top: 0; right: 0;
         width: var(--icon-size); height: var(--icon-size);
@@ -124,6 +92,7 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
+    /* 吹き出し */
     .speech-bubble {
         position: absolute; top: -35px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
@@ -145,6 +114,7 @@
     @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     @keyframes floatBubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
+    /* ヘッダー */
     .frame-header {
         position: absolute; top: 0; left: 0; width: 100%;
         padding: 30px calc(var(--icon-size) + 30px) 30px 40px;
@@ -199,28 +169,76 @@
         transform: translate3d(-50%, -50%, 0) scale(0); opacity: 0; transition: transform 0.4s ease-out, opacity 0.4s;
     }
 
+    /* =========================================
+       ★修正：レスポンシブ対応（スマホ）
+       ========================================= */
     @media screen and (max-width: 900px) {
-        .bg-character { background-size: contain; background-position: 80% center; }
-        .frame-header { padding: 20px; gap: 15px; padding-right: calc(var(--icon-size) + 20px); flex-direction: column; align-items: flex-start; }
-        .logo { font-size: max(48px, 8vw); } .sub-logo { font-size: max(13px, 2.2vw); }
-        .header-nav ul { gap: 10px; flex-wrap: wrap; }
-        .header-nav a { font-size: max(14px, 2.5vw); } .nav-sub { display: block; font-size: 10px; }
+        /* 背景画像：繰り返しなし、画面全体を埋める、顔を中心に */
+        .bg-character {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 70% center; /* 顔があるであろう右寄りに設定 */
+        }
+
+        /* ヘッダーレイアウト：アイコンの横にタイトルを入れるために右余白を調整 */
+        .frame-header {
+            padding: 20px;
+            padding-right: 90px; /* アイコンサイズ+余白 */
+            flex-direction: column; 
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        /* ★タイトルを小さくして収める */
+        .logo { font-size: 28px; } 
+        .sub-logo { font-size: 10px; margin-left: 0; }
+
+        /* ★ターミナル（メニュー）を小さくして、タイトルとアイコンの間に収める感じに */
+        .header-nav ul { 
+            gap: 8px; 
+            flex-wrap: wrap; 
+            margin-top: 5px;
+        }
+        .header-nav a { 
+            font-size: 11px; /* 小さく */
+            align-items: flex-start; /* 左揃え */
+        }
+        .nav-sub { font-size: 9px; }
+
+        /* ★アイコンサイズ */
+        .icon-container { width: 70px; height: 70px; top: 15px; right: 15px; }
+
+        /* ★吹き出し：復活 & 位置調整 */
+        .speech-bubble {
+            display: flex; /* 表示する */
+            top: 90px; /* アイコンの下に配置 */
+            right: 15px;
+            padding: 8px 15px;
+            font-size: 10px;
+        }
+        /* しっぽの向き修正（上に向ける） */
+        .speech-bubble::after {
+            bottom: auto; top: -10px; right: 20px;
+            border-width: 0 10px 10px 10px;
+            border-color: transparent transparent #fff transparent;
+        }
+
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
         .loading-container { padding: 40px 60px; } .loading-title { font-size: 28px; }
     }
+
     @media screen and (max-width: 480px) {
-        .bg-character { background-size: 150%; background-position: 70% bottom; }
         .frame-group { width: 94vw; height: 94vh; }
-        .frame-header { padding: 15px; padding-right: calc(var(--icon-size) + 10px); }
-        .speech-bubble { display: none; }
-        .logo { font-size: max(50px, 18vw); }
-        .header-nav a { font-size: 15px; padding: 4px; }
+        
+        /* さらに画面が小さい場合 */
+        .logo { font-size: 24px; }
+        .header-nav a { font-size: 10px; }
+        .nav-sub { display: none; } /* スペースがなければ日本語は消す */
+        
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 10vw; bottom: 20px; right: 15px; }
         .loading-container { padding: 30px 40px; width: 70%; }
         .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
-        
-        #bg-slideshow { gap: 0; }
     }
   </style>
 </head>
@@ -259,30 +277,10 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li>
-                <a href="#about-us">
-                    <span class="nav-main">ABOUT US</span>
-                    <span class="nav-sub">私たちのこと</span>
-                </a>
-            </li>
-            <li>
-                <a href="#member">
-                    <span class="nav-main">MEMBER</span>
-                    <span class="nav-sub">ゼミ生紹介</span>
-                </a>
-            </li>
-            <li>
-                <a href="#activity">
-                    <span class="nav-main">ACTIVITY JOURNAL</span>
-                    <span class="nav-sub">活動記録</span>
-                </a>
-            </li>
-            <li>
-                <a href="#contact">
-                    <span class="nav-main">INQUIRY</span>
-                    <span class="nav-sub">お問い合わせ</span>
-                </a>
-            </li>
+            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
+            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
+            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
+            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
           </ul>
         </nav>
       </header>
@@ -309,7 +307,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // ★設定エリア：写真リスト
+        // 写真リスト
         const slidePhotos = [
             '20220610_IMG_0502の一部.jpg',
             '20240409_140842.jpg',
