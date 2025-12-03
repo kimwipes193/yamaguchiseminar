@@ -15,7 +15,9 @@
 
     /* --- 変数定義 --- */
     :root {
-        --icon-size: clamp(70px, 15vw, 260px);
+        /* ★修正：PC版アイコンサイズを「画面幅の11%」に調整し、ノートPCでの巨大化を防ぐ */
+        /* 最小90px 〜 推奨11vw 〜 最大240px */
+        --icon-size: clamp(90px, 11vw, 240px);
     }
 
     /* --- ベース設定 --- */
@@ -84,7 +86,6 @@
         position: relative; width: 100%; height: 100%;
         border: 3px solid #fff; border-radius: 30px;
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        transition: background-color 0.3s ease; /* 背景色変化用 */
     }
 
     /* アイコン */
@@ -102,14 +103,18 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し */
+    /* 吹き出し（PC用：レスポンシブ対応） */
     .speech-bubble {
         position: absolute; 
-        top: -50px; 
-        right: calc(var(--icon-size) - 60px);
+        /* アイコンサイズに合わせて位置を微調整 */
+        top: calc(var(--icon-size) * -0.15 - 10px); 
+        right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
-        padding: 20px 35px; 
-        font-size: 22px; 
+        
+        /* ★修正：フォントサイズと余白を画面幅に合わせて可変に */
+        padding: clamp(12px, 1.5vw, 20px) clamp(20px, 2.5vw, 35px); 
+        font-size: clamp(14px, 1.4vw, 22px); 
+        
         border-radius: 40px;
         font-family: 'Barmo', sans-serif; font-weight: bold;
         white-space: nowrap; width: auto; min-width: 20px;
@@ -130,7 +135,8 @@
     /* ヘッダー（PC用） */
     .frame-header {
         position: absolute; top: 0; left: 0; width: 100%;
-        padding: 30px calc(var(--icon-size) + 80px) 30px 40px;
+        /* アイコンサイズに応じて余白を調整 */
+        padding: 30px calc(var(--icon-size) + 60px) 30px 40px;
         box-sizing: border-box;
         display: flex; justify-content: space-between; align-items: flex-start;
         pointer-events: auto; z-index: 20;
@@ -138,14 +144,15 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
-    /* PC版タイトル・サブタイトル */
+    /* ★修正：PC版タイトルサイズを可変に（clampを使用） */
     .logo { 
-        font-size: max(80px, 6.8vw); 
+        font-size: clamp(50px, 6vw, 100px); /* ノートPCでは小さく、大画面では大きく */
         margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
     }
+    /* ★修正：PC版サブタイトルサイズを可変に */
     .sub-logo { 
         font-family: 'Barmo', sans-serif; 
-        font-size: max(22px, 1.44vw); 
+        font-size: clamp(16px, 1.5vw, 27px); 
         margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
     }
     
@@ -186,13 +193,12 @@
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
+    /* PC版キャッチコピー */
     .catch-copy { 
         position: absolute; bottom: 40px; right: 40px; text-align: right; 
-        font-family: 'Dela Gothic One', sans-serif; font-size: max(40px, 6vw); 
-        color: #fff; z-index: 5; line-height: 0.9; 
-        text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); 
-        opacity: 0; 
-        transition: opacity 0.3s, transform 0.3s; /* アニメーション追加 */
+        font-family: 'Dela Gothic One', sans-serif; 
+        font-size: clamp(40px, 6vw, 90px); /* こちらも可変に */
+        color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; 
     }
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
@@ -260,11 +266,11 @@
 
         /* スマホ版サイズ */
         .logo { 
-            font-size: 50px; /* 63px -> 50px (0.8倍) */
+            font-size: 50px; 
             letter-spacing: -0.1em; 
         } 
         .sub-logo { 
-            font-size: 16px; /* 20px -> 16px (0.8倍) */
+            font-size: 16px; 
             margin-left: 0; 
         }
 
@@ -331,23 +337,22 @@
         #bg-slideshow { gap: 0; }
     }
 
-    /* ★修正：メニューオープン時のスタイル */
+    /* メニューオープン時のスタイル */
     body.menu-open .icon-container { width: 100%; height: 40%; border-bottom-left-radius: 0; border-top-right-radius: 27px; border-left: none; border-bottom: 2px solid #fff; z-index: 40; }
     body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
     
-    /* ★修正：キャッチコピーもフェードアウトさせる */
     body.menu-open .catch-copy, 
     body.menu-open .speech-bubble, 
     body.menu-open .logo, 
     body.menu-open .sub-logo, 
     body.menu-open .scroll-down { 
-        opacity: 0 !important; /* 確実に消す */
+        opacity: 0 !important; 
         pointer-events: none; 
     }
     
-    /* ★修正：メニュー背景をマゼンタ（#FF4291）に変更 */
+    /* メニュー背景：マゼンタ */
     body.menu-open .frame { 
-        background-color: rgba(255, 66, 145, 0.95) !important; /* マゼンタ背景 */
+        background-color: rgba(255, 66, 145, 0.95) !important; 
     }
     
     body.menu-open .hamburger-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -538,20 +543,6 @@
                 }
             }, 40);
         }
-
-        const menuBtn = document.getElementById('menu-btn');
-        if(menuBtn) {
-            menuBtn.addEventListener('click', () => {
-                document.body.classList.toggle('menu-open');
-            });
-        }
-
-        const navLinks = document.querySelectorAll('.header-nav a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                document.body.classList.remove('menu-open');
-            });
-        });
         
         const typingTextSpan = document.getElementById('typing-text');
         const normalPhrases = [
