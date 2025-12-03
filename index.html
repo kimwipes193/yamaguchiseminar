@@ -14,7 +14,7 @@
     @font-face { font-family: 'Barmo'; src: url('fonts/barmo-webfont.woff2') format('woff2'); }
     @font-face { font-family: 'Dela Gothic One'; src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); }
 
-    /* --- 変数定義（デスクトップPC基準） --- */
+    /* --- 変数定義 --- */
     :root {
         --icon-size: clamp(100px, 15vw, 260px);
         --frame-radius: 30px;
@@ -105,8 +105,7 @@
     /* 吹き出し（PC用） */
     .speech-bubble {
         position: absolute; 
-        top: -60px; 
-        right: calc(var(--icon-size) - 40px);
+        top: -60px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
         padding: 20px 35px; font-size: 22px; 
         border-radius: 40px;
@@ -175,18 +174,17 @@
     .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
     .dot { width: 10px; height: 10px; border-radius: 50%; } .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
-    /* キャッチコピー */
     .catch-copy { 
         position: absolute; bottom: 40px; right: 40px; text-align: right; 
         font-family: 'Dela Gothic One', sans-serif; 
-        font-size: clamp(100px, 11vw, 200px); 
+        font-size: max(128px, 8.8vw); 
         color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; 
         pointer-events: none;
     }
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; display: inline-block; opacity: 0; }
 
-    /* --- ターミナル（メニュー画面） --- */
+    /* --- ターミナル（メニュー画面・スマホ用） --- */
     .terminal-container {
         display: none; 
         position: absolute; bottom: 0; left: 0; width: 100%; 
@@ -198,21 +196,44 @@
         border-bottom-right-radius: calc(var(--frame-radius) - 3px); 
         z-index: 45; overflow-y: auto;
         pointer-events: auto;
+        /* Flexboxで中身を配置 */
         flex-direction: column;
     }
     
     .terminal-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; }
     .terminal-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; } .red { background-color: #ff5f56; } .yellow { background-color: #ffbd2e; } .green { background-color: #27c93f; }
     .terminal-title { margin-left: auto; font-size: 12px; color: #fff; opacity: 0.8; font-family: 'Roboto Mono', monospace; }
-    .terminal-content { font-size: 13px; line-height: 1.6; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    
+    /* コンテンツエリア：残りの高さを埋める */
+    .terminal-content { 
+        font-size: 13px; line-height: 1.6; 
+        flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    
     .terminal-menu-list { list-style: none; padding: 0; margin: 0; }
     .terminal-menu-list li { margin-bottom: 8px; }
-    .terminal-menu-list a { color: #fff; text-decoration: none; font-size: 18px; font-weight: bold; font-family: 'Barmo', sans-serif; transition: color 0.2s; }
+    .terminal-menu-list a { 
+        color: #fff; text-decoration: none; font-size: 18px; 
+        font-weight: bold; font-family: 'Barmo', sans-serif; transition: color 0.2s; 
+    }
     .terminal-menu-list a:hover { color: #ffff00; }
     .terminal-menu-sub { font-size: 12px; color: rgba(255,255,255,0.8); margin-left: 10px; font-family: 'Barmo', sans-serif; }
-    
-    .sns-link-container { margin-top: 20px; display: flex; justify-content: center; align-items: center; }
-    .sns-icon { display: inline-block; width: 30px; height: 30px; background: #fff; mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>') no-repeat center; -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>'); transition: transform 0.2s; }
+
+    /* ★追加：SNSアイコン */
+    .sns-link-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .sns-icon {
+        display: inline-block;
+        width: 30px; height: 30px;
+        background: #fff; /* アイコンの色 */
+        mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>') no-repeat center;
+        -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>');
+        transition: transform 0.2s;
+    }
     .sns-icon:hover { transform: scale(1.1); }
 
     /* ロード画面 */
@@ -234,32 +255,21 @@
        ★レスポンシブ対応
        ========================================= */
     
-    /* ★修正：ノートPC専用調整（0.6倍に縮小） */
+    /* ノートパソコン (901px〜1400px) */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
-        :root { --icon-size: clamp(30px, 6vw, 70px); }
-        
-        .speech-bubble {
-            padding: 6px 12px; 
-            font-size: 10px;
-            top: -30px;
-            right: calc(var(--icon-size) - 15px);
-            border-radius: 15px;
-        }
-        .speech-bubble::after { bottom: -8px; right: 20px; border-width: 8px 0 0 8px; }
-
-        .logo { font-size: clamp(50px, 5vw, 80px); }
-        .sub-logo { font-size: 16px; margin-left: 20px; }
-        /* ★修正：キャッチコピーも0.7倍に */
-        .catch-copy { font-size: clamp(28px, 3.5vw, 50px); bottom: 30px; right: 30px; }
-        
-        .header-nav { margin-top: 10px; }
+        :root { --icon-size: clamp(50px, 6vw, 120px); }
+        .speech-bubble { padding: 8px 15px; font-size: 12px; top: -40px; right: calc(var(--icon-size) - 20px); border-radius: 20px; }
+        .speech-bubble::after { bottom: -10px; right: 25px; border-width: 10px 0 0 10px; }
+        .logo { font-size: clamp(50px, 5vw, 80px); } .sub-logo { font-size: 16px; margin-left: 20px; }
+        .catch-copy { font-size: clamp(40px, 5vw, 70px); bottom: 30px; right: 30px; }
+        .header-nav { margin-top: 5px; }
         .frame-header { padding-right: calc(var(--icon-size) + 40px); }
     }
 
-    /* スマホ（900px以下） */
+    /* スマホ (900px以下) */
     @media screen and (max-width: 900px) {
         :root { --icon-size: 80px; --frame-radius: 50px; }
-        .bg-character { background-position: 100% center; }
+        .bg-character { background-position: 95% center; }
         .frame-group { width: 88vw; height: 88vh; }
         .loading-border-draw.expand { width: 88vw; height: 88vh; }
         .frame-header { padding: 20px; padding-right: 90px; flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -268,9 +278,16 @@
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); }
         .hamburger-btn { display: flex; border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; }
         .speech-bubble { display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px; }
-        .speech-bubble::after { top: auto; bottom: -8px; right: auto; left: 50%; border-width: 12px 6px 0 6px; border-color: #fff transparent transparent transparent; transform: translateX(-50%); }
+        .speech-bubble::after {
+            top: auto; bottom: -12px; right: auto; left: 50%;
+            border-width: 12px 6px 0 6px; border-color: #fff transparent transparent transparent;
+            transform: translateX(-50%);
+        }
         .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; }
-        .loading-container { width: 100%; } .loading-title { font-size: 28px; }
+        
+        /* ★修正：スマホ版ロード画面を小さく */
+        .loading-container { width: 300px; height: 200px; } 
+        .loading-title { font-size: 28px; }
         .scroll-down { border-radius: 0 30px 0 calc(var(--frame-radius) - 3px); }
         .frame { border-radius: var(--frame-radius); }
     }
@@ -286,20 +303,31 @@
         .speech-bubble { top: -20px; right: 15px; }
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 12vw; bottom: 20px; right: 80px; }
-        .loading-title { font-size: 24px; }
+        .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
         #bg-slideshow { gap: 0; }
     }
 
-    /* メニューオープン時 */
-    body.menu-open .icon-container { width: 100%; height: 40%; border-bottom-left-radius: 0; border-top-right-radius: 27px; border-left: none; border-bottom: 2px solid #fff; z-index: 40; }
+    /* メニューオープン時のスタイル */
+    body.menu-open .icon-container { 
+        width: 100%; height: 50%; 
+        border-bottom-left-radius: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); /* ★修正：角丸合体 */
+        /* ★修正：左上の角丸を追加 */
+        border-top-left-radius: calc(var(--frame-radius) - 3px);
+        
+        border-left: none; border-bottom: 2px solid #fff; z-index: 40; 
+    }
     body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
     body.menu-open .catch-copy, body.menu-open .speech-bubble, body.menu-open .logo, body.menu-open .sub-logo, body.menu-open .scroll-down { opacity: 0 !important; pointer-events: none; }
     body.menu-open .frame { background-color: rgba(255, 66, 145, 0.95) !important; }
     body.menu-open .hamburger-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     body.menu-open .hamburger-btn span:nth-child(2) { opacity: 0; }
     body.menu-open .hamburger-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-    body.menu-open .terminal-container { display: flex; animation: slideUp 0.5s ease forwards; }
-    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    
+    /* メニュー時：ターミナル表示（Flexbox） */
+    body.menu-open .terminal-container { 
+        display: flex; /* flexにしてSNSを下へ */
+        animation: slideUp 0.5s ease forwards; 
+    }
   </style>
 </head>
 <body>
@@ -511,7 +539,6 @@
                                 character.style.transition = "opacity 1.5s";
                             }
                             startTypewriter();
-                            
                             if (typeof gsap !== 'undefined') {
                                 gsap.fromTo(".catch-copy", 
                                     { opacity: 0, y: 20 }, 
