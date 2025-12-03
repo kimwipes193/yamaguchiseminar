@@ -124,7 +124,7 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し（PCデフォルト） */
+    /* 吹き出し（PC用デフォルト） */
     .speech-bubble {
         position: absolute; top: -35px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
@@ -245,27 +245,30 @@
 
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; }
 
-        /* ★修正：吹き出しを右に移動してアイコンに重ねる */
+        /* 吹き出し */
         .speech-bubble {
             display: flex;
             top: -25px;  
-            right: 20px; /* 90px -> 20px に変更（アイコンに被る） */
+            /* ★修正：もっと右にずらしてアイコンに被せる */
+            right: 20px; /* 90px -> 20px */
             padding: 8px 15px;
             font-size: 10px;
         }
         
-        /* ★修正：尻尾を下辺につける */
+        /* ★修正：尻尾を下辺中央に移動＆反転 */
         .speech-bubble::after {
-            top: auto;
-            bottom: -8px;    /* 下に突き出す */
-            right: 20px;     /* 右端寄りに配置 */
+            top: auto;      /* PC版設定のリセット */
+            bottom: -12px;  /* 下に突き出す */
+            right: auto;    /* 右指定リセット */
+            left: 50%;      /* 中央配置 */
             
-            /* 下向きの三角形 */
+            /* 三角形の形 */
             border-style: solid;
-            border-width: 8px 8px 0 0; /* PC版と同じロジックで縮小 */
+            border-width: 12px 12px 0 0; /* 右下向きの形 */
             border-color: #fff transparent transparent transparent;
             
-            transform: none; 
+            /* 中央揃えの補正(-50%) と 左右反転(scaleX(-1)) */
+            transform: translateX(-50%) scaleX(-1);
         }
 
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
@@ -288,7 +291,7 @@
         
         .icon-container { width: 70px; height: 70px; }
         
-        /* 小型スマホでも右寄せ維持 */
+        /* 小型スマホでも位置維持 */
         .speech-bubble { 
             top: -20px; 
             right: 15px; 
@@ -388,7 +391,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // 写真リスト
         const slidePhotos = [
             '20220610_IMG_0502の一部.jpg', '20240409_140842.jpg', '20240409_141055.jpg',
             '20240409_162116.jpg', '20240409_162159.jpg', '20240409_162405.jpg',
@@ -399,7 +401,6 @@
             '20240705_183653.jpg', '20240705_201405.jpg'
         ];
         
-        // 背景スライドショー
         const bgContainer = document.getElementById('bg-slideshow');
         const isMobile = window.innerWidth < 900;
         const ROW_COUNT = isMobile ? 12 : 8; 
@@ -438,7 +439,6 @@
             }
         }
 
-        // ローディング＆アニメーション
         const loadingScreen = document.getElementById("loading-screen");
         const loadingPercentage = document.getElementById("loading-percentage");
         const loadingBorder = document.getElementById("loading-border");
@@ -471,7 +471,10 @@
                             }
                             startTypewriter();
                             if (typeof gsap !== 'undefined') {
-                                gsap.from(".catch-copy", { opacity: 0, y: 50, duration: 1, delay: 0.5 });
+                                gsap.fromTo(".catch-copy", 
+                                    { opacity: 0, y: 20 }, 
+                                    { opacity: 1, y: 0, duration: 1, delay: 0.5 }
+                                );
                             }
                         }, 1000);
                     }, 500);
@@ -479,7 +482,6 @@
             }, 40);
         }
         
-        // タイプライター
         const typingTextSpan = document.getElementById('typing-text');
         const normalPhrases = [
             "エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！",
@@ -523,7 +525,6 @@
             }
         }
 
-        // カーソル
         const cursor = document.querySelector(".cursor");
         let mouseX = -100, mouseY = -100; 
         window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
