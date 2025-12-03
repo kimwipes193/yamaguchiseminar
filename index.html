@@ -74,7 +74,6 @@
     .frame-group {
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 90vw; height: 90vh; z-index: 10; 
-        /* フレーム自体はクリックを通す */
         pointer-events: none;
         opacity: 0; 
         transition: opacity 0.5s ease;
@@ -87,13 +86,16 @@
         position: relative; width: 100%; height: 100%;
         border: 3px solid #fff; border-radius: 30px;
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        /* overflow: hidden をつけるとメニュー展開時に綺麗に切り取られる */
+        overflow: hidden;
     }
 
     /* アイコン */
     .icon-container {
         position: absolute; top: 0; right: 0;
         width: var(--icon-size); height: var(--icon-size);
-        z-index: 50; pointer-events: auto;
+        z-index: 50; 
+        pointer-events: auto; 
         border-top-right-radius: 27px; border-bottom-left-radius: 30px;
         overflow: hidden;
         border-left: 3px solid rgba(255,255,255,0.9);
@@ -140,15 +142,15 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
-    /* ★修正：PC版タイトルサイズを縮小（0.6倍） */
+    /* PC版タイトル（0.8倍） */
     .logo { 
-        font-size: max(87px, 7.5vw); 
+        font-size: max(80px, 6.8vw); 
         margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
     }
-    /* ★修正：PC版サブタイトルサイズを縮小（0.6倍） */
+    /* PC版サブタイトル（0.8倍） */
     .sub-logo { 
         font-family: 'Barmo', sans-serif; 
-        font-size: max(24px, 1.6vw); 
+        font-size: max(22px, 1.44vw); 
         margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
     }
     
@@ -256,10 +258,9 @@
         }
         .speech-bubble::after {
             bottom: -10px; right: 25px;
-            border-width: 8px 0 0 8px;
+            border-width: 10px 0 0 10px;
         }
 
-        /* ノートPCでのタイトルサイズ調整（デスクトップの巨大化をキャンセル） */
         .logo { font-size: clamp(50px, 5vw, 80px); }
         .sub-logo { font-size: 16px; margin-left: 20px; }
         .catch-copy { font-size: clamp(40px, 5vw, 70px); bottom: 30px; right: 30px; }
@@ -290,9 +291,16 @@
         .sub-logo { font-size: 16px; margin-left: 0; }
 
         .header-nav { 
-            position: absolute; top: 45%; left: 0; width: 100%; 
-            opacity: 0; pointer-events: none; visibility: hidden; 
-            transition: opacity 0.5s ease, visibility 0.5s; z-index: 55;
+            position: absolute; 
+            top: auto; /* 上位置リセット */
+            bottom: 0; /* 下固定 */
+            left: 0; 
+            width: 100%; 
+            opacity: 0; 
+            pointer-events: none; 
+            visibility: hidden; 
+            transition: opacity 0.5s ease, visibility 0.5s; 
+            z-index: 55;
             margin-top: 0; 
         }
         .header-nav ul { flex-direction: column; align-items: flex-start; gap: 25px; padding-left: 40px; }
@@ -309,15 +317,25 @@
             padding: 8px 15px;
             font-size: 10px;
         }
+        /* ★修正：尻尾を下辺中央に配置 */
         .speech-bubble::after {
-            top: auto; bottom: -8px; right: 20px; left: 50%;
-            border-width: 12px 12px 0 0; border-color: #fff transparent transparent transparent;
-            transform: translateX(-50%) scaleX(-1);
+            top: auto; 
+            bottom: -10px; 
+            left: 50%;
+            right: auto;
+            
+            /* 下向きの三角形 */
+            border-style: solid;
+            border-width: 10px 8px 0 8px; 
+            border-color: #fff transparent transparent transparent;
+            
+            transform: translateX(-50%);
         }
 
         .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; }
         
-        .loading-container { width: 100%; } .loading-title { font-size: 28px; }
+        .loading-container { width: 100%; } 
+        .loading-title { font-size: 28px; }
     }
 
     @media screen and (max-width: 480px) {
@@ -341,11 +359,62 @@
         #bg-slideshow { gap: 0; }
     }
 
-    /* メニューオープン時のスタイル */
-    body.menu-open .icon-container { width: 100%; height: 40%; border-bottom-left-radius: 0; border-top-right-radius: 27px; border-left: none; border-bottom: 2px solid #fff; z-index: 40; }
-    body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
-    body.menu-open .catch-copy, body.menu-open .speech-bubble, body.menu-open .logo, body.menu-open .sub-logo, body.menu-open .scroll-down { opacity: 0 !important; pointer-events: none; }
-    body.menu-open .frame { background-color: rgba(255, 66, 145, 0.95) !important; }
+    /* =========================================
+       ★メニューオープン時のスタイル（Valuence風レイアウト）
+       ========================================= */
+    body.menu-open .icon-container { 
+        /* 上半分を占める */
+        width: 100%; 
+        height: 50%; 
+        
+        /* 上の角丸はフレームに合わせる */
+        border-radius: 27px 27px 0 0; 
+        border: none; 
+        border-bottom: 3px solid #fff; /* 区切り線 */
+        
+        top: 0; right: 0;
+        z-index: 40; 
+    }
+    
+    /* 画像の見え方調整：顔を中心に */
+    body.menu-open .icon-image {
+        object-position: center 20%; 
+    }
+
+    body.menu-open .header-nav { 
+        /* 下半分を占める */
+        opacity: 1; 
+        pointer-events: auto; 
+        visibility: visible;
+        
+        height: 50%;
+        top: auto;
+        bottom: 0;
+        
+        background-color: rgba(255, 66, 145, 0.95); /* マゼンタ背景 */
+        border-radius: 0 0 30px 30px; /* 下の角丸 */
+        
+        display: flex;
+        justify-content: center; /* 上下中央寄せ */
+        padding: 0;
+    }
+    
+    /* メニュー内の要素は隠す */
+    body.menu-open .catch-copy, 
+    body.menu-open .speech-bubble, 
+    body.menu-open .logo, 
+    body.menu-open .sub-logo, 
+    body.menu-open .scroll-down { 
+        opacity: 0 !important; 
+        pointer-events: none; 
+    }
+    
+    /* フレーム背景は透明に（header-navが背景色を持つため） */
+    body.menu-open .frame { 
+        background-color: transparent !important; 
+    }
+    
+    /* ハンバーガーボタンのアニメーション */
     body.menu-open .hamburger-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     body.menu-open .hamburger-btn span:nth-child(2) { opacity: 0; }
     body.menu-open .hamburger-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
