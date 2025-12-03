@@ -53,16 +53,13 @@
         100% { transform: translateX(-50%); } 
     }
 
-    /* --- ★修正：透過キャラクター --- */
+    /* --- 透過キャラクター --- */
     .bg-character {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: url('img/character.png'); 
-        
-        /* PC（基本設定） */
         background-size: cover; 
         background-position: center;
-        background-repeat: no-repeat; /* ★重要：繰り返しを禁止 */
-        
+        background-repeat: no-repeat;
         z-index: -2;
         pointer-events: none;
     }
@@ -92,7 +89,7 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し */
+    /* 吹き出し（PC用デフォルト位置） */
     .speech-bubble {
         position: absolute; top: -35px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
@@ -106,6 +103,7 @@
         display: flex; justify-content: center; align-items: center;
         will-change: transform; animation: floatBubble 3s ease-in-out infinite;
     }
+    /* しっぽ（PC用：下向き） */
     .speech-bubble::after {
         content: ''; position: absolute; bottom: -13px; right: 30px;
         border-style: solid; border-width: 15px 0 0 15px; border-color: #fff transparent transparent transparent;
@@ -132,6 +130,7 @@
     .nav-main { font-family: 'Barmo', sans-serif; font-weight: bold; font-size: max(14px, 1.1vw); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); white-space: nowrap; }
     .nav-sub { display: block; font-size: 0.7vw; text-align: center; margin-top: 4px; opacity: 0.9; }
 
+    /* スクロールダウン */
     .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 23px; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; }
     .scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
     .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
@@ -142,6 +141,7 @@
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
 
+    /* ロード画面 */
     #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FF4291; z-index: 9999; display: flex; justify-content: center; align-items: center; color: white; }
     .loading-container { position: relative; padding: 60px 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .loading-border-draw {
@@ -170,57 +170,56 @@
     }
 
     /* =========================================
-       ★修正：レスポンシブ対応（スマホ）
+       ★レスポンシブ対応（スマホ修正）
        ========================================= */
     @media screen and (max-width: 900px) {
-        /* 背景画像：繰り返しなし、画面全体を埋める、顔を中心に */
+        /* 背景画像：繰り返しなし、顔（右側）を中心に配置 */
         .bg-character {
             background-repeat: no-repeat;
             background-size: cover;
-            background-position: 70% center; /* 顔があるであろう右寄りに設定 */
+            background-position: 85% center; /* 85%右寄りに設定して顔を入れる */
         }
 
-        /* ヘッダーレイアウト：アイコンの横にタイトルを入れるために右余白を調整 */
+        /* フレームサイズ：縦を少し縮める */
+        .frame-group { width: 92vw; height: 85vh; }
+
+        /* ヘッダーレイアウト */
         .frame-header {
             padding: 20px;
-            padding-right: 90px; /* アイコンサイズ+余白 */
+            padding-right: 90px;
             flex-direction: column; 
             align-items: flex-start;
             gap: 10px;
         }
 
-        /* ★タイトルを小さくして収める */
         .logo { font-size: 28px; } 
         .sub-logo { font-size: 10px; margin-left: 0; }
 
-        /* ★ターミナル（メニュー）を小さくして、タイトルとアイコンの間に収める感じに */
-        .header-nav ul { 
-            gap: 8px; 
-            flex-wrap: wrap; 
-            margin-top: 5px;
-        }
-        .header-nav a { 
-            font-size: 11px; /* 小さく */
-            align-items: flex-start; /* 左揃え */
-        }
+        /* メニュー */
+        .header-nav ul { gap: 8px; flex-wrap: wrap; margin-top: 5px; }
+        .header-nav a { font-size: 11px; align-items: flex-start; }
         .nav-sub { font-size: 9px; }
 
-        /* ★アイコンサイズ */
-        .icon-container { width: 70px; height: 70px; top: 15px; right: 15px; }
+        /* ★アイコン：0,0に固定して角を合体させる */
+        .icon-container { 
+            width: 80px; height: 80px; 
+            top: 0; right: 0; /* これで白枠と合体します */
+        }
 
-        /* ★吹き出し：復活 & 位置調整 */
+        /* ★吹き出し：アイコンの「左上」に配置 */
         .speech-bubble {
-            display: flex; /* 表示する */
-            top: 90px; /* アイコンの下に配置 */
-            right: 15px;
+            display: flex;
+            top: -25px;  /* 枠の上に飛び出させる */
+            right: 90px; /* アイコン(80px)の左隣 */
             padding: 8px 15px;
             font-size: 10px;
         }
-        /* しっぽの向き修正（上に向ける） */
+        /* しっぽの向き修正（右向き） */
         .speech-bubble::after {
-            bottom: auto; top: -10px; right: 20px;
-            border-width: 0 10px 10px 10px;
-            border-color: transparent transparent #fff transparent;
+            bottom: 10px; /* 位置微調整 */
+            right: -8px;  /* 右に出す */
+            border-width: 8px 0 8px 10px; /* 右向きの三角形 */
+            border-color: transparent transparent transparent #fff;
         }
 
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
@@ -228,17 +227,36 @@
     }
 
     @media screen and (max-width: 480px) {
-        .frame-group { width: 94vw; height: 94vh; }
+        /* スマホ縦持ち用：さらに顔に寄せる */
+        .bg-character {
+            background-position: 80% center; 
+        }
+
+        /* 枠サイズさらに調整 */
+        .frame-group { width: 88vw; height: 82vh; }
+
+        .frame-header { padding: 15px; padding-right: 80px; }
         
-        /* さらに画面が小さい場合 */
         .logo { font-size: 24px; }
         .header-nav a { font-size: 10px; }
-        .nav-sub { display: none; } /* スペースがなければ日本語は消す */
+        /* スペース確保のため日本語メニューは非表示にしても良いが、ご希望により表示維持 */
         
+        /* アイコン縮小 */
+        .icon-container { width: 70px; height: 70px; }
+        
+        /* 吹き出し位置調整 */
+        .speech-bubble { 
+            display: flex;
+            top: -20px;
+            right: 80px; 
+        }
+
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 10vw; bottom: 20px; right: 15px; }
         .loading-container { padding: 30px 40px; width: 70%; }
         .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
+        
+        #bg-slideshow { gap: 0; }
     }
   </style>
 </head>
@@ -277,10 +295,30 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
-            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
-            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
-            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
+            <li>
+                <a href="#about-us">
+                    <span class="nav-main">ABOUT US</span>
+                    <span class="nav-sub">私たちのこと</span>
+                </a>
+            </li>
+            <li>
+                <a href="#member">
+                    <span class="nav-main">MEMBER</span>
+                    <span class="nav-sub">ゼミ生紹介</span>
+                </a>
+            </li>
+            <li>
+                <a href="#activity">
+                    <span class="nav-main">ACTIVITY JOURNAL</span>
+                    <span class="nav-sub">活動記録</span>
+                </a>
+            </li>
+            <li>
+                <a href="#contact">
+                    <span class="nav-main">INQUIRY</span>
+                    <span class="nav-sub">お問い合わせ</span>
+                </a>
+            </li>
           </ul>
         </nav>
       </header>
@@ -307,7 +345,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // 写真リスト
+        // ★設定エリア：写真リスト
         const slidePhotos = [
             '20220610_IMG_0502の一部.jpg',
             '20240409_140842.jpg',
@@ -335,6 +373,7 @@
         const bgContainer = document.getElementById('bg-slideshow');
         
         const isMobile = window.innerWidth < 900;
+        // PC: 8行, スマホ: 12行
         const ROW_COUNT = isMobile ? 12 : 8; 
         const duration = isMobile ? 500 : 300;
 
