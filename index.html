@@ -53,22 +53,34 @@
         100% { transform: translateX(-50%); } 
     }
 
-    /* --- 透過キャラクター --- */
+    /* --- ★キャラクター（フェードインアニメーション用） --- */
     .bg-character {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-image: url('img/character.png'); 
         background-size: cover; 
         background-position: center;
-        background-repeat: no-repeat;
         z-index: -2;
         pointer-events: none;
+        /* ★初期状態は透明 */
+        opacity: 0; 
+        transition: opacity 1.5s ease; /* 1.5秒かけてふわっと出る */
+    }
+    /* ★JSで付与するクラス */
+    .bg-character.visible {
+        opacity: 1;
     }
 
-    /* --- フレーム --- */
+    /* --- フレーム（初期状態は透明、枠アニメ完了後に表示） --- */
     .frame-group {
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 90vw; height: 90vh; z-index: 10; pointer-events: none;
+        opacity: 0; /* 最初は隠す */
+        transition: opacity 0.5s ease;
     }
+    .frame-group.visible {
+        opacity: 1;
+    }
+
     .frame {
         position: relative; width: 100%; height: 100%;
         border: 3px solid #fff; border-radius: 30px;
@@ -89,7 +101,7 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し（PC用デフォルト位置） */
+    /* 吹き出し */
     .speech-bubble {
         position: absolute; top: -35px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
@@ -103,7 +115,6 @@
         display: flex; justify-content: center; align-items: center;
         will-change: transform; animation: floatBubble 3s ease-in-out infinite;
     }
-    /* しっぽ（PC用：下向き） */
     .speech-bubble::after {
         content: ''; position: absolute; bottom: -13px; right: 30px;
         border-style: solid; border-width: 15px 0 0 15px; border-color: #fff transparent transparent transparent;
@@ -130,34 +141,81 @@
     .nav-main { font-family: 'Barmo', sans-serif; font-weight: bold; font-size: max(14px, 1.1vw); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); white-space: nowrap; }
     .nav-sub { display: block; font-size: 0.7vw; text-align: center; margin-top: 4px; opacity: 0.9; }
 
-    /* スクロールダウン */
+    /* スクロールダウン & キャッチコピー */
     .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 23px; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; }
     .scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
     .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
-    .catch-copy { position: absolute; bottom: 40px; right: 40px; text-align: right; font-family: 'Dela Gothic One', sans-serif; font-size: max(40px, 6vw); color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); }
+    /* キャッチコピー（JSで遅延表示させるため初期は透明に） */
+    .catch-copy { 
+        position: absolute; bottom: 40px; right: 40px; text-align: right; 
+        font-family: 'Dela Gothic One', sans-serif; font-size: max(40px, 6vw); 
+        color: #fff; z-index: 5; line-height: 0.9; 
+        text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); 
+        opacity: 0; /* JS制御 */
+    }
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
 
-    /* ロード画面 */
-    #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FF4291; z-index: 9999; display: flex; justify-content: center; align-items: center; color: white; }
-    .loading-container { position: relative; padding: 60px 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    /* --- ★ロード画面（枠拡大アニメーション対応） --- */
+    #loading-screen { 
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: #FF4291; z-index: 9999; 
+        display: flex; justify-content: center; align-items: center; color: white; 
+        transition: background-color 0.5s ease; /* 背景色フェード用 */
+    }
+    
+    /* 背景が消えるクラス */
+    #loading-screen.bg-hidden {
+        background-color: transparent;
+    }
+
+    .loading-container { 
+        position: relative; 
+        /* 拡大前のサイズ */
+        width: 300px; height: 200px; 
+        display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    }
+
+    /* 枠線アニメーション */
     .loading-border-draw {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        position: absolute; top: 50%; left: 50%; 
+        transform: translate(-50%, -50%);
+        width: 100%; height: 100%; /* 親(300x200)に合わせる */
         border: 4px solid #fff; border-radius: 20px; box-sizing: border-box;
+        
+        /* マスク（描画アニメ用） */
         mask: conic-gradient(from 180deg at 50% 50%, #000 0%, #000 var(--p, 0%), transparent var(--p, 0%), transparent 100%);
         -webkit-mask: conic-gradient(from 180deg at 50% 50%, #000 0%, #000 var(--p, 0%), transparent var(--p, 0%), transparent 100%);
-        will-change: mask-image; 
+        will-change: width, height, border-radius;
+        transition: width 1.0s cubic-bezier(0.2, 1, 0.2, 1), height 1.0s cubic-bezier(0.2, 1, 0.2, 1), border-radius 1.0s ease;
     }
-    .loading-content { position: relative; z-index: 2; text-align: center; }
+
+    /* ★拡大時のクラス */
+    .loading-border-draw.expand {
+        mask: none; -webkit-mask: none; /* マスク解除 */
+        width: 90vw; 
+        height: 90vh;
+        border-radius: 30px; /* メインフレームと同じ角丸に */
+        border-width: 3px;   /* 太さも合わせる */
+    }
+
+    /* ロード中の文字（フェードアウト用） */
+    .loading-content { 
+        position: relative; z-index: 2; text-align: center; 
+        transition: opacity 0.5s;
+    }
+    .loading-content.hidden { opacity: 0; }
+
     .loading-title { font-family: 'Senobi Gothic', sans-serif; font-size: 40px; margin: 0; letter-spacing: 0.1em; text-shadow: 0 0 10px rgba(0,0,0,0.1); }
     .loading-subtitle { font-family: 'Barmo', sans-serif; font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; opacity: 0.9; }
-    .loading-status-box { margin-top: 30px; font-family: 'Roboto Mono', monospace; font-size: 18px; font-weight: bold; letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px; }
+    .loading-status-box { margin-top: 30px; font-family: 'Roboto Mono', monospace; font-size: 18px; font-weight: bold; letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px; justify-content: center; }
     .blinking-cursor { display: inline-block; width: 10px; height: 18px; background-color: #fff; animation: blink 1s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
+    /* カーソル */
     .cursor {
         position: fixed; top: 0; left: 0; width: 20px; height: 20px;
         background: rgba(255,255,255,0.8); border: 2px solid #FF4291; border-radius: 50%;
@@ -169,93 +227,26 @@
         transform: translate3d(-50%, -50%, 0) scale(0); opacity: 0; transition: transform 0.4s ease-out, opacity 0.4s;
     }
 
-    /* =========================================
-       ★レスポンシブ対応（スマホ修正）
-       ========================================= */
+    /* レスポンシブ */
     @media screen and (max-width: 900px) {
-        /* 背景画像：繰り返しなし、顔（右側）を中心に配置 */
-        .bg-character {
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: 85% center; /* 85%右寄りに設定して顔を入れる */
-        }
-
-        /* フレームサイズ：縦を少し縮める */
-        .frame-group { width: 92vw; height: 85vh; }
-
-        /* ヘッダーレイアウト */
-        .frame-header {
-            padding: 20px;
-            padding-right: 90px;
-            flex-direction: column; 
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .logo { font-size: 28px; } 
-        .sub-logo { font-size: 10px; margin-left: 0; }
-
-        /* メニュー */
-        .header-nav ul { gap: 8px; flex-wrap: wrap; margin-top: 5px; }
-        .header-nav a { font-size: 11px; align-items: flex-start; }
-        .nav-sub { font-size: 9px; }
-
-        /* アイコン：0,0に固定して角を合体させる */
-        .icon-container { 
-            width: 80px; height: 80px; 
-            top: 0; right: 0; /* これで白枠と合体します */
-        }
-
-        /* 吹き出し：アイコンの「左上」に配置 */
-        .speech-bubble {
-            display: flex;
-            top: -25px;  /* 枠の上に飛び出させる */
-            right: 90px; /* アイコン(80px)の左隣 */
-            padding: 8px 15px;
-            font-size: 10px;
-        }
-        /* ★修正：しっぽの向き修正（右下向き） */
-        .speech-bubble::after {
-            bottom: -8px; /* 吹き出しの下にはみ出させる */
-            right: 15px;  /* 右端から少し内側に配置 */
-            border-width: 8px 8px 0 0; /* 上と右にボーダーを設定 */
-            border-color: #fff transparent transparent transparent; /* 上だけ白、他は透明 */
-            transform: rotate(90deg); /* 90度回転させて右下向きにする */
-            top: auto; /* PC版の設定を打ち消す */
-        }
-
+        .frame-header { padding: 20px; gap: 15px; padding-right: calc(var(--icon-size) + 20px); flex-direction: column; align-items: flex-start; }
+        .logo { font-size: max(48px, 8vw); } .sub-logo { font-size: max(13px, 2.2vw); }
+        .header-nav ul { gap: 10px; flex-wrap: wrap; }
+        .header-nav a { font-size: max(14px, 2.5vw); } .nav-sub { display: none; }
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
-        .loading-container { padding: 40px 60px; } .loading-title { font-size: 28px; }
+        
+        /* ロード画面調整 */
+        .loading-container { width: 100%; }
+        .loading-title { font-size: 28px; }
     }
-
     @media screen and (max-width: 480px) {
-        /* スマホ縦持ち用：さらに顔に寄せる */
-        .bg-character {
-            background-position: 80% center; 
-        }
-
-        /* 枠サイズさらに調整 */
-        .frame-group { width: 88vw; height: 82vh; }
-
-        .frame-header { padding: 15px; padding-right: 80px; }
-        
-        .logo { font-size: 24px; }
-        .header-nav a { font-size: 10px; }
-        /* スペース確保のため日本語メニューは非表示にしても良いが、ご希望により表示維持 */
-        
-        /* アイコン縮小 */
-        .icon-container { width: 70px; height: 70px; }
-        
-        /* 吹き出し位置調整 */
-        .speech-bubble { 
-            display: flex;
-            top: -20px;
-            right: 80px; 
-        }
-
+        .frame-group { width: 94vw; height: 94vh; }
+        .frame-header { padding: 15px; padding-right: calc(var(--icon-size) + 10px); }
+        .speech-bubble { display: none; }
+        .logo { font-size: max(50px, 18vw); }
+        .header-nav a { font-size: 15px; padding: 4px; }
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 10vw; bottom: 20px; right: 15px; }
-        .loading-container { padding: 30px 40px; width: 70%; }
         .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
         
         #bg-slideshow { gap: 0; }
@@ -270,7 +261,7 @@
   <div id="loading-screen">
     <div class="loading-container">
       <div class="loading-border-draw" id="loading-border"></div>
-      <div class="loading-content">
+      <div class="loading-content" id="loading-content">
         <h1 class="loading-title">ヤマグチゼミ</h1>
         <p class="loading-subtitle">DATA SCIENCE & AI LAB</p>
         <div class="loading-status-box">
@@ -282,7 +273,7 @@
     </div>
   </div>
 
-  <div class="frame-group">
+  <div class="frame-group" id="main-frame-group">
     <div class="frame">
       <div class="speech-bubble">
           <span id="typing-text"></span><span class="typing-cursor"></span>
@@ -297,30 +288,10 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li>
-                <a href="#about-us">
-                    <span class="nav-main">ABOUT US</span>
-                    <span class="nav-sub">私たちのこと</span>
-                </a>
-            </li>
-            <li>
-                <a href="#member">
-                    <span class="nav-main">MEMBER</span>
-                    <span class="nav-sub">ゼミ生紹介</span>
-                </a>
-            </li>
-            <li>
-                <a href="#activity">
-                    <span class="nav-main">ACTIVITY JOURNAL</span>
-                    <span class="nav-sub">活動記録</span>
-                </a>
-            </li>
-            <li>
-                <a href="#contact">
-                    <span class="nav-main">INQUIRY</span>
-                    <span class="nav-sub">お問い合わせ</span>
-                </a>
-            </li>
+            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
+            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
+            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
+            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
           </ul>
         </nav>
       </header>
@@ -347,35 +318,20 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // ★設定エリア：写真リスト
+        // 写真リスト
         const slidePhotos = [
-            '20220610_IMG_0502の一部.jpg',
-            '20240409_140842.jpg',
-            '20240409_141055.jpg',
-            '20240409_162116.jpg',
-            '20240409_162159.jpg',
-            '20240409_162405.jpg',
-            '20240409_162836.jpg',
-            '20240409_162853.jpg',
-            '20240409_162858.jpg',
-            '20240409_163824.jpg',
-            '20240409_163917.jpg',
-            '20240409_164031.jpg',
-            '20240409_164053.jpg',
-            '20240409_164236.jpg',
-            '20240416_155234.jpg',
-            '20240528_140127.jpg',
-            '20240528_140135.jpg',
-            '20240623_114145.jpg',
-            '20240705_183653.jpg',
-            '20240705_201405.jpg'
+            '20220610_IMG_0502の一部.jpg', '20240409_140842.jpg', '20240409_141055.jpg',
+            '20240409_162116.jpg', '20240409_162159.jpg', '20240409_162405.jpg',
+            '20240409_162836.jpg', '20240409_162853.jpg', '20240409_162858.jpg',
+            '20240409_163824.jpg', '20240409_163917.jpg', '20240409_164031.jpg',
+            '20240409_164053.jpg', '20240409_164236.jpg', '20240416_155234.jpg',
+            '20240528_140127.jpg', '20240528_140135.jpg', '20240623_114145.jpg',
+            '20240705_183653.jpg', '20240705_201405.jpg'
         ];
         
         // --- 1. 背景スライドショー ---
         const bgContainer = document.getElementById('bg-slideshow');
-        
         const isMobile = window.innerWidth < 900;
-        // PC: 8行, スマホ: 12行
         const ROW_COUNT = isMobile ? 12 : 8; 
         const duration = isMobile ? 500 : 300;
 
@@ -393,16 +349,12 @@
                 row.className = 'slide-row';
                 const track = document.createElement('div');
                 track.className = 'slide-track';
-                
                 if (i % 2 !== 0) track.style.animationDirection = 'reverse';
-                
                 const finalDuration = duration + Math.random() * 50;
                 track.style.animationDuration = `${finalDuration}s`;
                 track.style.animationName = 'scrollLoop';
-
                 const rowImages = shuffle([...slidePhotos]); 
                 const displayImages = [...rowImages, ...rowImages, ...rowImages]; 
-
                 displayImages.forEach(filename => {
                     const img = document.createElement('img');
                     img.src = `slide/${filename}`;
@@ -411,16 +363,18 @@
                     img.onerror = () => { img.style.display = 'none'; };
                     track.appendChild(img);
                 });
-
                 row.appendChild(track);
                 bgContainer.appendChild(row);
             }
         }
 
-        // --- 2. ローディング ---
+        // --- 2. ローディング＆アニメーション ---
         const loadingScreen = document.getElementById("loading-screen");
         const loadingPercentage = document.getElementById("loading-percentage");
         const loadingBorder = document.getElementById("loading-border");
+        const loadingContent = document.getElementById("loading-content");
+        const mainFrameGroup = document.getElementById("main-frame-group");
+        const character = document.querySelector(".bg-character");
 
         if (loadingScreen && loadingPercentage && loadingBorder) {
             let progress = 0;
@@ -432,18 +386,37 @@
 
                 if (progress >= 100) {
                     clearInterval(interval);
-                    if (typeof gsap !== 'undefined') {
+                    
+                    // ★アニメーションシーケンス
+                    setTimeout(() => {
+                        // 1. 文字を消す
+                        loadingContent.classList.add("hidden");
+                        
+                        // 2. ピンク背景を透明にする
+                        loadingScreen.classList.add("bg-hidden");
+                        
+                        // 3. 枠を拡大する（Valuence風）
+                        loadingBorder.classList.add("expand");
+                        
+                        // 4. 拡大完了後（1秒後）
                         setTimeout(() => {
-                             gsap.to(loadingScreen, { opacity: 0, duration: 0.8, onComplete: () => {
-                                 loadingScreen.style.display = "none";
-                                 startTypewriter();
-                             }});
-                             gsap.from(".catch-copy", { opacity: 0, y: 50, duration: 1, delay: 0.5 });
-                        }, 200);
-                    } else {
-                        loadingScreen.style.display = "none";
-                        startTypewriter();
-                    }
+                            // ロード画面を完全に消す
+                            loadingScreen.style.display = "none";
+                            // 本物のフレームを表示（位置は重なっている）
+                            mainFrameGroup.classList.add("visible");
+                            
+                            // ★5. キャラクターをフェードイン
+                            if(character) character.classList.add("visible");
+                            
+                            // キャッチコピー等の表示
+                            if (typeof gsap !== 'undefined') {
+                                gsap.to(".catch-copy", { opacity: 1, duration: 1, delay: 0.5 });
+                            }
+                            
+                            startTypewriter();
+                        }, 1000); // transition時間と合わせる
+                        
+                    }, 500);
                 }
             }, 40);
         }
