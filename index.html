@@ -32,22 +32,46 @@
     #bg-slideshow {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         z-index: -3;
-        display: flex; flex-direction: column; overflow: hidden;
-        opacity: 0.8; background-color: #000;
+        display: flex; flex-direction: column; 
+        overflow: hidden;
+        opacity: 0.8; 
+        background-color: #000;
     }
+
+    /* 各行の設定 */
     .slide-row {
-        flex: 1; width: 100%; overflow: hidden; position: relative;
-        display: flex; align-items: center; border: none; margin: 0; padding: 0;
+        flex: 1; 
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        border: none;
+        margin: 0;
+        padding: 0;
     }
+
+    /* 画像が流れるレール */
     .slide-track {
-        display: flex; width: max-content; 
-        animation-timing-function: linear; animation-iteration-count: infinite;
+        display: flex;
+        width: max-content; 
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
         will-change: transform;
     }
+
+    /* スライド画像 */
     .slide-img {
-        height: 100%; width: auto; aspect-ratio: 4 / 3; 
-        object-fit: cover; margin: 0; padding: 0; border: none; display: block; 
+        height: 100%; 
+        width: auto;
+        aspect-ratio: 4 / 3; 
+        object-fit: cover; 
+        margin: 0;
+        padding: 0;
+        border: none;
+        display: block; 
     }
+    
     @keyframes scrollLoop {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); } 
@@ -100,7 +124,7 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し（PC用デフォルト） */
+    /* 吹き出し（PCデフォルト） */
     .speech-bubble {
         position: absolute; top: -35px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
@@ -140,7 +164,7 @@
     .nav-main { font-family: 'Barmo', sans-serif; font-weight: bold; font-size: max(14px, 1.1vw); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); white-space: nowrap; }
     .nav-sub { display: block; font-size: 0.7vw; text-align: center; margin-top: 4px; opacity: 0.9; }
 
-    /* スクロールダウン & キャッチコピー */
+    /* スクロールダウン */
     .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 23px; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; }
     .scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
     .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
@@ -159,7 +183,13 @@
         transition: background-color 0.5s ease;
     }
     #loading-screen.bg-hidden { background-color: transparent; }
-    .loading-container { position: relative; width: 300px; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    
+    .loading-container { 
+        position: relative; 
+        width: 600px; height: 400px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    }
+    
     .loading-border-draw {
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 100%; height: 100%; border: 4px solid #fff; border-radius: 20px; box-sizing: border-box;
@@ -215,31 +245,33 @@
 
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; }
 
-        /* 吹き出し */
+        /* ★修正：吹き出しを右に移動してアイコンに重ねる */
         .speech-bubble {
             display: flex;
             top: -25px;  
-            right: 90px; 
+            right: 20px; /* 90px -> 20px に変更（アイコンに被る） */
             padding: 8px 15px;
             font-size: 10px;
         }
         
-        /* ★修正：スマホ用の尻尾（右下向き） */
+        /* ★修正：尻尾を下辺につける */
         .speech-bubble::after {
-            bottom: 8px;      /* 少し上にあげる */
-            right: -8px;      /* 吹き出しの右側に突き出す */
+            top: auto;
+            bottom: -8px;    /* 下に突き出す */
+            right: 20px;     /* 右端寄りに配置 */
             
-            /* 三角形の形を作る（左向きの境界線を使って右に出す） */
+            /* 下向きの三角形 */
             border-style: solid;
-            border-width: 6px 0 6px 10px; /* 上下6px、左10pxの幅 */
-            border-color: transparent transparent transparent #fff;
+            border-width: 8px 8px 0 0; /* PC版と同じロジックで縮小 */
+            border-color: #fff transparent transparent transparent;
             
-            top: auto; /* PC版の設定をリセット */
-            transform: none; /* 回転させない */
+            transform: none; 
         }
 
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
-        .loading-container { padding: 40px 60px; } .loading-title { font-size: 28px; }
+        
+        .loading-container { width: 100%; } 
+        .loading-title { font-size: 28px; }
     }
 
     @media screen and (max-width: 480px) {
@@ -255,7 +287,12 @@
         .nav-sub { font-size: 10px; }
         
         .icon-container { width: 70px; height: 70px; }
-        .speech-bubble { top: -20px; right: 80px; }
+        
+        /* 小型スマホでも右寄せ維持 */
+        .speech-bubble { 
+            top: -20px; 
+            right: 15px; 
+        }
 
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 10vw; bottom: 20px; right: 15px; }
@@ -301,10 +338,30 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
-            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
-            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
-            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
+            <li>
+                <a href="#about-us">
+                    <span class="nav-main">ABOUT US</span>
+                    <span class="nav-sub">私たちのこと</span>
+                </a>
+            </li>
+            <li>
+                <a href="#member">
+                    <span class="nav-main">MEMBER</span>
+                    <span class="nav-sub">ゼミ生紹介</span>
+                </a>
+            </li>
+            <li>
+                <a href="#activity">
+                    <span class="nav-main">ACTIVITY JOURNAL</span>
+                    <span class="nav-sub">活動記録</span>
+                </a>
+            </li>
+            <li>
+                <a href="#contact">
+                    <span class="nav-main">INQUIRY</span>
+                    <span class="nav-sub">お問い合わせ</span>
+                </a>
+            </li>
           </ul>
         </nav>
       </header>
@@ -331,6 +388,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+        // 写真リスト
         const slidePhotos = [
             '20220610_IMG_0502の一部.jpg', '20240409_140842.jpg', '20240409_141055.jpg',
             '20240409_162116.jpg', '20240409_162159.jpg', '20240409_162405.jpg',
@@ -341,6 +399,7 @@
             '20240705_183653.jpg', '20240705_201405.jpg'
         ];
         
+        // 背景スライドショー
         const bgContainer = document.getElementById('bg-slideshow');
         const isMobile = window.innerWidth < 900;
         const ROW_COUNT = isMobile ? 12 : 8; 
@@ -379,6 +438,7 @@
             }
         }
 
+        // ローディング＆アニメーション
         const loadingScreen = document.getElementById("loading-screen");
         const loadingPercentage = document.getElementById("loading-percentage");
         const loadingBorder = document.getElementById("loading-border");
@@ -419,6 +479,7 @@
             }, 40);
         }
         
+        // タイプライター
         const typingTextSpan = document.getElementById('typing-text');
         const normalPhrases = [
             "エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！",
@@ -462,6 +523,7 @@
             }
         }
 
+        // カーソル
         const cursor = document.querySelector(".cursor");
         let mouseX = -100, mouseY = -100; 
         window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
