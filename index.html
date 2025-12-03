@@ -13,7 +13,7 @@
     @font-face { font-family: 'Barmo'; src: url('fonts/barmo-webfont.woff2') format('woff2'); }
     @font-face { font-family: 'Dela Gothic One'; src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); }
 
-    /* --- 変数定義（デスクトップPC基準） --- */
+    /* --- 変数定義 --- */
     :root {
         /* デスクトップ用アイコンサイズ */
         --icon-size: clamp(100px, 15vw, 260px);
@@ -107,7 +107,6 @@
     /* 吹き出し（PC用） */
     .speech-bubble {
         position: absolute; 
-        /* ★修正：PC版の位置をさらに上げる（-65px -> -85px） */
         top: -85px; 
         right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
@@ -141,19 +140,19 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
-    /* ★修正：PC版タイトルサイズを0.8倍に（64px〜120px） */
+    /* ★修正：PC版タイトルサイズを縮小（0.6倍） */
     .logo { 
-        font-size: clamp(64px, 6.8vw, 120px); 
+        font-size: max(87px, 7.5vw); 
         margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
     }
-    /* ★修正：PC版サブタイトルサイズを0.8倍に（18px〜26px） */
+    /* ★修正：PC版サブタイトルサイズを縮小（0.6倍） */
     .sub-logo { 
         font-family: 'Barmo', sans-serif; 
-        font-size: clamp(18px, 1.5vw, 26px); 
+        font-size: max(24px, 1.6vw); 
         margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
     }
     
-    /* PC版メニュー */
+    /* PC版メニュー位置 */
     .header-nav { margin-top: 35px; }
     .header-nav ul { display: flex; gap: 2vw; list-style: none; margin: 0; padding: 0; }
     .header-nav a { text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; transition: color 0.3s; }
@@ -161,28 +160,44 @@
     .nav-main { font-family: 'Barmo', sans-serif; font-weight: bold; font-size: max(14px, 1.1vw); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); white-space: nowrap; }
     .nav-sub { display: block; font-size: 0.7vw; text-align: center; margin-top: 4px; opacity: 0.9; }
 
-    /* ハンバーガーボタン（ここでは非表示、スマホで上書き） */
+    /* ハンバーガーボタン */
     .hamburger-btn {
         display: none;
+        position: absolute;
+        bottom: 0; right: 0;
+        width: 60px; height: 60px;
+        background: #fff;
+        border-radius: 30px 0 27px 0; 
+        z-index: 9999;
+        cursor: pointer;
+        align-items: center; justify-content: center;
+        flex-direction: column;
+        gap: 5px;
+        pointer-events: auto;
+        border: none;
+        outline: none;
+    }
+    .hamburger-btn span {
+        display: block; width: 24px; height: 2px; background-color: #333;
+        transition: transform 0.3s, opacity 0.3s;
     }
 
-    /* スクロールダウン */
+    /* スクロールダウン & キャッチコピー */
     .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 23px; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; z-index: 50; }
     .scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
     .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
-    /* キャッチコピー */
     .catch-copy { 
         position: absolute; bottom: 40px; right: 40px; text-align: right; 
         font-family: 'Dela Gothic One', sans-serif; 
-        font-size: clamp(60px, 8vw, 100px); /* PC版は大きめ */
+        font-size: clamp(100px, 11vw, 200px); 
         color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; 
         pointer-events: none;
     }
     .catch-copy p { margin: 0; }
-    .catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
+    .catch-copy .highlight { font-style: italic; margin-right: 0.2em; display: inline-block; opacity: 0; }
 
     /* ロード画面 */
     #loading-screen { 
@@ -226,27 +241,25 @@
        ★レスポンシブ対応
        ========================================= */
     
-    /* ★修正2：ノートパソコン専用調整（901px〜1400px） */
+    /* ノートパソコン専用調整（901px〜1400px） */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
-        /* アイコンサイズ：0.6倍（6vw〜） */
         :root {
             --icon-size: clamp(50px, 6vw, 110px);
         }
         
-        /* 吹き出し：0.6倍相当に小さく */
         .speech-bubble {
             padding: 8px 15px; 
             font-size: 12px;
-            top: -45px;
+            top: -40px;
             right: calc(var(--icon-size) - 20px);
             border-radius: 20px;
         }
         .speech-bubble::after {
-            bottom: -8px; right: 25px;
+            bottom: -10px; right: 25px;
             border-width: 8px 0 0 8px;
         }
 
-        /* タイトル：PC版の縮小設定を維持 */
+        /* ノートPCでのタイトルサイズ調整（デスクトップの巨大化をキャンセル） */
         .logo { font-size: clamp(50px, 5vw, 80px); }
         .sub-logo { font-size: 16px; margin-left: 20px; }
         .catch-copy { font-size: clamp(40px, 5vw, 70px); bottom: 30px; right: 30px; }
@@ -273,7 +286,6 @@
             flex-direction: column; align-items: flex-start; gap: 10px;
         }
 
-        /* スマホ版サイズ（維持） */
         .logo { font-size: 50px; letter-spacing: -0.1em; } 
         .sub-logo { font-size: 16px; margin-left: 0; }
 
@@ -288,35 +300,17 @@
         .nav-sub { font-size: 14px; display: block; }
 
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; }
-        
-        /* ★修正3：ハンバーガーボタンの表示とz-index強化 */
-        .hamburger-btn {
-            display: flex;
-            position: absolute;
-            bottom: 0; right: 0;
-            width: 60px; height: 60px;
-            background: #fff;
-            border-radius: 30px 0 27px 0; 
-            z-index: 99999; /* 最前面へ */
-            cursor: pointer;
-            align-items: center; justify-content: center;
-            flex-direction: column;
-            gap: 5px;
-            pointer-events: auto;
-            border: none;
-            outline: none;
-        }
-        .hamburger-btn span {
-            display: block; width: 24px; height: 2px; background-color: #333;
-            transition: transform 0.3s, opacity 0.3s;
-        }
+        .hamburger-btn { display: flex; }
 
         .speech-bubble {
             display: flex;
-            top: -25px; right: 20px; padding: 8px 15px; font-size: 10px;
+            top: -25px;  
+            right: 20px; 
+            padding: 8px 15px;
+            font-size: 10px;
         }
         .speech-bubble::after {
-            top: auto; bottom: -8px; right: auto; left: 50%;
+            top: auto; bottom: -8px; right: 20px; left: 50%;
             border-width: 12px 12px 0 0; border-color: #fff transparent transparent transparent;
             transform: translateX(-50%) scaleX(-1);
         }
@@ -334,6 +328,7 @@
         
         .logo { font-size: 38px; }
         .sub-logo { font-size: 14px; }
+        
         .header-nav a { font-size: 24px; }
         .nav-sub { font-size: 12px; }
         
@@ -341,10 +336,12 @@
         .speech-bubble { top: -20px; right: 15px; }
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 12vw; bottom: 20px; right: 80px; }
+        
         .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
         #bg-slideshow { gap: 0; }
     }
 
+    /* メニューオープン時のスタイル */
     body.menu-open .icon-container { width: 100%; height: 40%; border-bottom-left-radius: 0; border-top-right-radius: 27px; border-left: none; border-bottom: 2px solid #fff; z-index: 40; }
     body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
     body.menu-open .catch-copy, body.menu-open .speech-bubble, body.menu-open .logo, body.menu-open .sub-logo, body.menu-open .scroll-down { opacity: 0 !important; pointer-events: none; }
@@ -377,7 +374,7 @@
   <div class="frame-group" id="main-frame-group">
     <div class="frame">
       
-      <button class="hamburger-btn" id="menu-btn">
+      <button class="hamburger-btn" id="menu-btn" onclick="document.body.classList.toggle('menu-open')">
         <span></span><span></span><span></span>
       </button>
 
@@ -397,10 +394,30 @@
         
         <nav class="header-nav">
           <ul>
-            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
-            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
-            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
-            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
+            <li>
+                <a href="#about-us">
+                    <span class="nav-main">ABOUT US</span>
+                    <span class="nav-sub">私たちのこと</span>
+                </a>
+            </li>
+            <li>
+                <a href="#member">
+                    <span class="nav-main">MEMBER</span>
+                    <span class="nav-sub">ゼミ生紹介</span>
+                </a>
+            </li>
+            <li>
+                <a href="#activity">
+                    <span class="nav-main">ACTIVITY JOURNAL</span>
+                    <span class="nav-sub">活動記録</span>
+                </a>
+            </li>
+            <li>
+                <a href="#contact">
+                    <span class="nav-main">INQUIRY</span>
+                    <span class="nav-sub">お問い合わせ</span>
+                </a>
+            </li>
           </ul>
         </nav>
       </header>
@@ -509,7 +526,11 @@
                             if (typeof gsap !== 'undefined') {
                                 gsap.fromTo(".catch-copy", 
                                     { opacity: 0, y: 20 }, 
-                                    { opacity: 1, y: 0, duration: 1, delay: 0.5 }
+                                    { opacity: 1, y: 0, duration: 0.8, delay: 0.5 }
+                                );
+                                gsap.fromTo(".highlight",
+                                    { x: -50, opacity: 0 },
+                                    { x: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.6 }
                                 );
                             }
                         }, 1000);
