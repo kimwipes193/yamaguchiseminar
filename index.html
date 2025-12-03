@@ -62,13 +62,22 @@
         background-repeat: no-repeat;
         z-index: -2;
         pointer-events: none;
+        /* 初期状態は透明（ロード後にフェードイン） */
+        opacity: 0; 
+        transition: opacity 1.5s ease;
     }
+    .bg-character.visible { opacity: 1; }
 
     /* --- フレーム --- */
     .frame-group {
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 90vw; height: 90vh; z-index: 10; pointer-events: none;
+        /* 初期状態は透明（ロード枠拡大後に表示） */
+        opacity: 0; 
+        transition: opacity 0.5s ease;
     }
+    .frame-group.visible { opacity: 1; }
+
     .frame {
         position: relative; width: 100%; height: 100%;
         border: 3px solid #fff; border-radius: 30px;
@@ -136,24 +145,48 @@
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
-    .catch-copy { position: absolute; bottom: 40px; right: 40px; text-align: right; font-family: 'Dela Gothic One', sans-serif; font-size: max(40px, 6vw); color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); }
+    .catch-copy { 
+        position: absolute; bottom: 40px; right: 40px; text-align: right; 
+        font-family: 'Dela Gothic One', sans-serif; font-size: max(40px, 6vw); 
+        color: #fff; z-index: 5; line-height: 0.9; 
+        text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); 
+        opacity: 0; /* JSで表示 */
+    }
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
 
-    /* ロード画面 */
-    #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FF4291; z-index: 9999; display: flex; justify-content: center; align-items: center; color: white; }
-    .loading-container { position: relative; padding: 60px 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    /* --- ロード画面 --- */
+    #loading-screen { 
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: #FF4291; z-index: 9999; 
+        display: flex; justify-content: center; align-items: center; color: white; 
+        transition: background-color 0.5s ease;
+    }
+    #loading-screen.bg-hidden { background-color: transparent; }
+
+    .loading-container { position: relative; width: 300px; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
     .loading-border-draw {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 100%; height: 100%;
         border: 4px solid #fff; border-radius: 20px; box-sizing: border-box;
         mask: conic-gradient(from 180deg at 50% 50%, #000 0%, #000 var(--p, 0%), transparent var(--p, 0%), transparent 100%);
         -webkit-mask: conic-gradient(from 180deg at 50% 50%, #000 0%, #000 var(--p, 0%), transparent var(--p, 0%), transparent 100%);
-        will-change: mask-image; 
+        will-change: width, height, border-radius;
+        transition: width 1.0s cubic-bezier(0.2, 1, 0.2, 1), height 1.0s cubic-bezier(0.2, 1, 0.2, 1), border-radius 1.0s ease;
     }
-    .loading-content { position: relative; z-index: 2; text-align: center; }
+    .loading-border-draw.expand {
+        mask: none; -webkit-mask: none;
+        width: 90vw; height: 90vh;
+        border-radius: 30px; border-width: 3px;
+    }
+
+    .loading-content { position: relative; z-index: 2; text-align: center; transition: opacity 0.5s; }
+    .loading-content.hidden { opacity: 0; }
+
     .loading-title { font-family: 'Senobi Gothic', sans-serif; font-size: 40px; margin: 0; letter-spacing: 0.1em; text-shadow: 0 0 10px rgba(0,0,0,0.1); }
     .loading-subtitle { font-family: 'Barmo', sans-serif; font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; opacity: 0.9; }
-    .loading-status-box { margin-top: 30px; font-family: 'Roboto Mono', monospace; font-size: 18px; font-weight: bold; letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px; }
+    .loading-status-box { margin-top: 30px; font-family: 'Roboto Mono', monospace; font-size: 18px; font-weight: bold; letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px; justify-content: center; }
     .blinking-cursor { display: inline-block; width: 10px; height: 18px; background-color: #fff; animation: blink 1s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
@@ -168,78 +201,38 @@
         transform: translate3d(-50%, -50%, 0) scale(0); opacity: 0; transition: transform 0.4s ease-out, opacity 0.4s;
     }
 
-    /* =========================================
-       ★レスポンシブ対応（スマホ修正）
-       ========================================= */
+    /* レスポンシブ */
     @media screen and (max-width: 900px) {
-        /* ★修正：背景画像をさらに右へずらす */
-        .bg-character {
-            background-repeat: no-repeat;
-            background-size: cover;
-            /* 95%の位置を中心にすることで、顔を画面内に入れる */
-            background-position: 95% center; 
-        }
-
+        .bg-character { background-repeat: no-repeat; background-size: cover; background-position: 95% center; }
         .frame-group { width: 88vw; height: 80vh; }
-
-        .frame-header {
-            padding: 20px;
-            padding-right: 90px;
-            flex-direction: column; 
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .logo { font-size: 28px; } 
-        .sub-logo { font-size: 10px; margin-left: 0; }
-
-        /* ★修正：メニューの文字サイズを大きく */
+        .frame-header { padding: 20px; padding-right: 90px; flex-direction: column; align-items: flex-start; gap: 10px; }
+        .logo { font-size: 28px; } .sub-logo { font-size: 10px; margin-left: 0; }
         .header-nav ul { gap: 12px; flex-wrap: wrap; margin-top: 8px; }
         .header-nav a { font-size: 14px; align-items: flex-start; }
         .nav-sub { font-size: 11px; display: block; }
-
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; }
-
-        .speech-bubble {
-            display: flex;
-            top: -25px;  
-            right: 90px; 
-            padding: 8px 15px;
-            font-size: 10px;
-        }
-        .speech-bubble::after {
-            bottom: 5px; right: -8px; 
-            border-width: 6px 0 6px 8px; 
-            border-color: transparent transparent transparent #fff;
-            top: auto; 
-        }
-
+        .speech-bubble { display: flex; top: -25px; right: 90px; padding: 8px 15px; font-size: 10px; }
+        .speech-bubble::after { bottom: 5px; right: -8px; border-width: 6px 0 6px 8px; border-color: transparent transparent transparent #fff; top: auto; }
         .catch-copy { font-size: 9vw; bottom: 30px; right: 20px; }
-        .loading-container { padding: 40px 60px; } .loading-title { font-size: 28px; }
+        .loading-container { width: 100%; } .loading-title { font-size: 28px; }
+        /* スマホでの拡大時サイズ合わせ */
+        .loading-border-draw.expand { width: 88vw; height: 80vh; }
     }
 
     @media screen and (max-width: 480px) {
-        /* ★修正：縦持ちスマホでの顔位置調整 */
-        .bg-character {
-            background-position: 90% center; 
-        }
-
+        .bg-character { background-position: 90% center; }
         .frame-group { width: 90vw; height: 78vh; }
         .frame-header { padding: 15px; padding-right: 80px; }
-        
         .logo { font-size: 22px; }
         .header-nav a { font-size: 13px; }
         .nav-sub { font-size: 10px; }
-        
         .icon-container { width: 70px; height: 70px; }
         .speech-bubble { top: -20px; right: 80px; }
-
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 10vw; bottom: 20px; right: 15px; }
-        .loading-container { padding: 30px 40px; width: 70%; }
         .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
-        
         #bg-slideshow { gap: 0; }
+        .loading-border-draw.expand { width: 90vw; height: 78vh; }
     }
   </style>
 </head>
@@ -251,7 +244,7 @@
   <div id="loading-screen">
     <div class="loading-container">
       <div class="loading-border-draw" id="loading-border"></div>
-      <div class="loading-content">
+      <div class="loading-content" id="loading-content">
         <h1 class="loading-title">ヤマグチゼミ</h1>
         <p class="loading-subtitle">DATA SCIENCE & AI LAB</p>
         <div class="loading-status-box">
@@ -263,7 +256,7 @@
     </div>
   </div>
 
-  <div class="frame-group">
+  <div class="frame-group" id="main-frame-group">
     <div class="frame">
       <div class="speech-bubble">
           <span id="typing-text"></span><span class="typing-cursor"></span>
@@ -278,30 +271,10 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li>
-                <a href="#about-us">
-                    <span class="nav-main">ABOUT US</span>
-                    <span class="nav-sub">私たちのこと</span>
-                </a>
-            </li>
-            <li>
-                <a href="#member">
-                    <span class="nav-main">MEMBER</span>
-                    <span class="nav-sub">ゼミ生紹介</span>
-                </a>
-            </li>
-            <li>
-                <a href="#activity">
-                    <span class="nav-main">ACTIVITY JOURNAL</span>
-                    <span class="nav-sub">活動記録</span>
-                </a>
-            </li>
-            <li>
-                <a href="#contact">
-                    <span class="nav-main">INQUIRY</span>
-                    <span class="nav-sub">お問い合わせ</span>
-                </a>
-            </li>
+            <li><a href="#about-us"><span class="nav-main">ABOUT US</span><span class="nav-sub">私たちのこと</span></a></li>
+            <li><a href="#member"><span class="nav-main">MEMBER</span><span class="nav-sub">ゼミ生紹介</span></a></li>
+            <li><a href="#activity"><span class="nav-main">ACTIVITY JOURNAL</span><span class="nav-sub">活動記録</span></a></li>
+            <li><a href="#contact"><span class="nav-main">INQUIRY</span><span class="nav-sub">お問い合わせ</span></a></li>
           </ul>
         </nav>
       </header>
@@ -378,7 +351,7 @@
             }
         }
 
-        // ローディング
+        // ローディング＆アニメーション
         const loadingScreen = document.getElementById("loading-screen");
         const loadingPercentage = document.getElementById("loading-percentage");
         const loadingBorder = document.getElementById("loading-border");
@@ -399,19 +372,23 @@
                     
                     setTimeout(() => {
                         loadingContent.classList.add("hidden");
-                        loadingScreen.style.backgroundColor = "transparent";
+                        loadingScreen.classList.add("bg-hidden");
+                        
+                        // 枠拡大
                         loadingBorder.classList.add("expand");
                         
                         setTimeout(() => {
                             loadingScreen.style.display = "none";
-                            if(character) {
-                                character.style.opacity = 1;
-                                character.style.transition = "opacity 1.5s";
-                            }
-                            startTypewriter();
+                            // ★修正：確実にメインフレームを表示する
+                            mainFrameGroup.classList.add("visible");
+                            
+                            if(character) character.classList.add("visible");
+                            
                             if (typeof gsap !== 'undefined') {
-                                gsap.from(".catch-copy", { opacity: 0, y: 50, duration: 1, delay: 0.5 });
+                                gsap.to(".catch-copy", { opacity: 1, duration: 1, delay: 0.5 });
                             }
+                            
+                            startTypewriter();
                         }, 1000);
                     }, 500);
                 }
