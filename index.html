@@ -84,7 +84,8 @@
         position: relative; width: 100%; height: 100%;
         border: 3px solid #fff; border-radius: 30px;
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        overflow: hidden; /* メニュー展開時に中身がはみ出さないように */
+        /* ★修正：overflow: hidden を削除しました（吹き出し表示のため） */
+        /* overflow: hidden; */ 
     }
 
     /* アイコン */
@@ -97,7 +98,7 @@
         border-left: 3px solid rgba(255,255,255,0.9);
         border-bottom: 3px solid rgba(255,255,255,0.9);
         background: #fff;
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* アニメーション用 */
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
@@ -115,7 +116,7 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         display: flex; justify-content: center; align-items: center;
         will-change: transform; animation: floatBubble 3s ease-in-out infinite;
-        transition: opacity 0.3s; /* メニューオープン時に消すため */
+        transition: opacity 0.3s;
     }
     .speech-bubble::after {
         content: ''; position: absolute; bottom: -13px; right: 30px;
@@ -144,14 +145,14 @@
     .nav-main { font-family: 'Barmo', sans-serif; font-weight: bold; font-size: max(14px, 1.1vw); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); white-space: nowrap; }
     .nav-sub { display: block; font-size: 0.7vw; text-align: center; margin-top: 4px; opacity: 0.9; }
 
-    /* ハンバーガーボタン（PCでは非表示） */
+    /* ハンバーガーボタン */
     .hamburger-btn {
         display: none;
         position: absolute;
-        bottom: 0; right: 0; /* 右下に配置 */
+        bottom: 0; right: 0;
         width: 60px; height: 60px;
         background: #fff;
-        border-radius: 30px 0 27px 0; /* フレームの角に合わせる */
+        border-radius: 30px 0 27px 0; 
         z-index: 100;
         cursor: pointer;
         align-items: center; justify-content: center;
@@ -198,58 +199,47 @@
     .blinking-cursor { display: inline-block; width: 10px; height: 18px; background-color: #fff; animation: blink 1s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: rgba(255,255,255,0.8); border: 2px solid #FF4291; border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate3d(-50%, -50%, 0); will-change: transform; }
-    .click-effect { position: fixed; top: 0; left: 0; width: 40px; height: 40px; border: 3px solid #FF4291; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate3d(-50%, -50%, 0) scale(0); opacity: 0; transition: transform 0.4s ease-out, opacity 0.4s; }
+    .cursor {
+        position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+        background: rgba(255,255,255,0.8); border: 2px solid #FF4291; border-radius: 50%;
+        pointer-events: none; z-index: 10000; transform: translate3d(-50%, -50%, 0); will-change: transform;
+    }
+    .click-effect {
+        position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+        border: 3px solid #FF4291; border-radius: 50%; pointer-events: none; z-index: 9999;
+        transform: translate3d(-50%, -50%, 0) scale(0); opacity: 0; transition: transform 0.4s ease-out, opacity 0.4s;
+    }
 
     /* =========================================
-       ★レスポンシブ＆ハンバーガーメニュー
+       ★レスポンシブ対応
        ========================================= */
     @media screen and (max-width: 900px) {
         .bg-character { background-repeat: no-repeat; background-size: cover; background-position: 95% center; }
         .frame-group { width: 88vw; height: 88vh; }
         .loading-border-draw.expand { width: 88vw; height: 88vh; }
 
-        /* ヘッダー */
         .frame-header {
-            padding: 20px; padding-right: 20px; /* アイコン避け不要 */
+            padding: 20px; padding-right: 90px;
             flex-direction: column; align-items: flex-start; gap: 10px;
-            transition: opacity 0.3s;
         }
+
         .logo { font-size: 42px; } 
         .sub-logo { font-size: 13px; margin-left: 0; }
 
-        /* ★メニューリスト（初期状態は隠す） */
         .header-nav {
-            position: absolute;
-            top: 45%; /* アイコンの下あたり */
-            left: 0;
-            width: 100%;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-            z-index: 55;
+            position: absolute; top: 45%; left: 0; width: 100%;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 55;
         }
-        .header-nav ul {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 25px;
-            padding-left: 40px; /* 左端揃え */
-        }
-        .header-nav a {
-            font-size: 28px; /* 開いたときは大きく */
-            align-items: flex-start;
-            text-shadow: 2px 2px 0 #000; /* 読みやすく */
-        }
+        .header-nav ul { flex-direction: column; align-items: flex-start; gap: 25px; padding-left: 40px; }
+        .header-nav a { font-size: 28px; align-items: flex-start; text-shadow: 2px 2px 0 #000; }
         .nav-sub { font-size: 14px; display: block; }
 
-        /* ★アイコン（通常時） */
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; }
-
-        /* ★ハンバーガーボタン（表示） */
         .hamburger-btn { display: flex; }
 
-        /* 吹き出し */
-        .speech-bubble { display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px; }
+        .speech-bubble {
+            display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px;
+        }
         .speech-bubble::after {
             top: auto; bottom: -12px; right: auto; left: 50%;
             border-width: 12px 12px 0 0; border-color: #fff transparent transparent transparent;
@@ -267,43 +257,27 @@
         .frame-header { padding: 15px; padding-right: 15px; }
         .logo { font-size: 32px; } .sub-logo { font-size: 11px; }
         .icon-container { width: 70px; height: 70px; }
+        
+        /* 吹き出し位置調整 */
         .speech-bubble { top: -20px; right: 15px; }
-        .scroll-down { width: 40px; height: 120px; } /* 左下にスクロール */
-        .catch-copy { font-size: 10vw; bottom: 20px; right: 80px; /* ボタンと被らないように */ }
+
+        .scroll-down { width: 40px; height: 120px; }
+        .catch-copy { font-size: 10vw; bottom: 20px; right: 80px; }
+        .loading-container { padding: 30px 40px; width: 70%; }
         .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
         #bg-slideshow { gap: 0; }
     }
 
-    /* =========================================
-       ★メニューオープン時のスタイル（クラス付与で発火）
-       ========================================= */
+    /* メニューオープン時のスタイル */
     body.menu-open .icon-container {
-        /* アイコンが拡大して上半分を埋める */
-        width: 100%;
-        height: 40%; /* 画面の4割くらい */
-        border-bottom-left-radius: 0; /* 角丸解除 */
-        border-top-right-radius: 27px; /* 枠に合わせる */
+        width: 100%; height: 40%;
+        border-bottom-left-radius: 0; border-top-right-radius: 27px;
         border-left: none; border-bottom: 2px solid #fff;
         z-index: 40;
     }
-    body.menu-open .header-nav {
-        opacity: 1;
-        pointer-events: auto;
-    }
-    /* メニューオープン時は他の要素を隠す/薄くする */
-    body.menu-open .catch-copy,
-    body.menu-open .speech-bubble,
-    body.menu-open .logo, 
-    body.menu-open .sub-logo,
-    body.menu-open .scroll-down {
-        opacity: 0;
-        pointer-events: none;
-    }
-    /* 背景を暗くする */
-    body.menu-open .frame {
-        background-color: rgba(0,0,0,0.8); 
-    }
-    /* ハンバーガーボタンを×にする */
+    body.menu-open .header-nav { opacity: 1; pointer-events: auto; }
+    body.menu-open .catch-copy, body.menu-open .speech-bubble, body.menu-open .logo, body.menu-open .sub-logo, body.menu-open .scroll-down { opacity: 0; pointer-events: none; }
+    body.menu-open .frame { background-color: rgba(0,0,0,0.8); }
     body.menu-open .hamburger-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     body.menu-open .hamburger-btn span:nth-child(2) { opacity: 0; }
     body.menu-open .hamburger-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -384,7 +358,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // 写真リスト
         const slidePhotos = [
             '20220610_IMG_0502の一部.jpg', '20240409_140842.jpg', '20240409_141055.jpg',
             '20240409_162116.jpg', '20240409_162159.jpg', '20240409_162405.jpg',
@@ -395,7 +368,6 @@
             '20240705_183653.jpg', '20240705_201405.jpg'
         ];
         
-        // 背景スライドショー
         const bgContainer = document.getElementById('bg-slideshow');
         const isMobile = window.innerWidth < 900;
         const ROW_COUNT = isMobile ? 12 : 8; 
@@ -434,7 +406,6 @@
             }
         }
 
-        // ローディング
         const loadingScreen = document.getElementById("loading-screen");
         const loadingPercentage = document.getElementById("loading-percentage");
         const loadingBorder = document.getElementById("loading-border");
@@ -452,10 +423,12 @@
 
                 if (progress >= 100) {
                     clearInterval(interval);
+                    
                     setTimeout(() => {
                         loadingContent.classList.add("hidden");
                         loadingScreen.style.backgroundColor = "transparent";
                         loadingBorder.classList.add("expand");
+                        
                         setTimeout(() => {
                             loadingScreen.style.display = "none";
                             mainFrameGroup.classList.add("visible");
@@ -465,7 +438,10 @@
                             }
                             startTypewriter();
                             if (typeof gsap !== 'undefined') {
-                                gsap.fromTo(".catch-copy", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, delay: 0.5 });
+                                gsap.fromTo(".catch-copy", 
+                                    { opacity: 0, y: 20 }, 
+                                    { opacity: 1, y: 0, duration: 1, delay: 0.5 }
+                                );
                             }
                         }, 1000);
                     }, 500);
@@ -473,7 +449,6 @@
             }, 40);
         }
 
-        // ★ハンバーガーメニュー機能
         const menuBtn = document.getElementById('menu-btn');
         if(menuBtn) {
             menuBtn.addEventListener('click', () => {
@@ -481,7 +456,6 @@
             });
         }
 
-        // リンククリック時にメニューを閉じる
         const navLinks = document.querySelectorAll('.header-nav a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -489,7 +463,6 @@
             });
         });
         
-        // タイプライター
         const typingTextSpan = document.getElementById('typing-text');
         const normalPhrases = [
             "エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！",
@@ -533,7 +506,6 @@
             }
         }
 
-        // カーソル
         const cursor = document.querySelector(".cursor");
         let mouseX = -100, mouseY = -100; 
         window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
