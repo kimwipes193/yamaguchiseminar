@@ -13,8 +13,10 @@
     @font-face { font-family: 'Senobi Gothic'; src: url('fonts/Senobi-Gothic-Bold.woff2') format('woff2'); }
     @font-face { font-family: 'Barmo'; src: url('fonts/barmo-webfont.woff2') format('woff2'); }
     @font-face { font-family: 'Dela Gothic One'; src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); }
+    /* ★追加：新フォントCHILK */
+    @font-face { font-family: 'CHILK'; src: url('fonts/CHILK___.woff2') format('woff2'); }
 
-    /* --- 変数定義（デスクトップPC基準） --- */
+    /* --- 変数定義 --- */
     :root {
         /* デスクトップ用アイコンサイズ */
         --icon-size: clamp(100px, 15vw, 260px);
@@ -68,17 +70,22 @@
         opacity: 0; 
         transition: opacity 1.5s ease;
     }
-    .bg-character.visible { opacity: 1; }
+    .bg-character.visible {
+        opacity: 1;
+    }
 
     /* --- フレーム --- */
     .frame-group {
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 90vw; height: 90vh; z-index: 10; 
+        /* フレーム自体はクリックを通す */
         pointer-events: none;
         opacity: 0; 
         transition: opacity 0.5s ease;
     }
-    .frame-group.visible { opacity: 1; }
+    .frame-group.visible {
+        opacity: 1;
+    }
 
     .frame {
         position: relative; width: 100%; height: 100%;
@@ -91,7 +98,8 @@
     .icon-container {
         position: absolute; top: 0; right: 0;
         width: var(--icon-size); height: var(--icon-size);
-        z-index: 50; pointer-events: auto;
+        z-index: 50; 
+        pointer-events: auto; 
         border-top-right-radius: calc(var(--frame-radius) - 3px); 
         border-bottom-left-radius: 30px;
         overflow: hidden;
@@ -103,13 +111,29 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
+    /* ★追加：キャラクター名（ニーナ） */
+    .character-name {
+        position: absolute;
+        top: 50%;
+        left: 150px; /* アイコンの横に配置 */
+        transform: translateY(-50%);
+        font-family: 'CHILK', sans-serif; /* 新しいフォント */
+        font-size: 32px;
+        color: #fff;
+        opacity: 0; /* 通常時は非表示 */
+        transition: opacity 0.3s ease 0.2s; /* メニューが開いた後に少し遅れて表示 */
+        pointer-events: none;
+        white-space: nowrap;
+    }
+
     /* 吹き出し（PC用） */
     .speech-bubble {
         position: absolute; 
         top: -60px; 
         right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
-        padding: 20px 35px; font-size: 22px; 
+        padding: 20px 35px; 
+        font-size: 22px; 
         border-radius: 40px;
         font-family: 'Barmo', sans-serif; font-weight: bold;
         white-space: nowrap; width: auto; min-width: 20px;
@@ -127,7 +151,7 @@
     @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     @keyframes floatBubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    /* ヘッダー */
+    /* ヘッダー（PC用） */
     .frame-header {
         position: absolute; top: 0; left: 0; width: 100%;
         padding: 30px calc(var(--icon-size) + 80px) 30px 40px;
@@ -138,17 +162,19 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
-    /* デスクトップPC版 */
+    /* PC版タイトル */
     .logo { 
         font-size: max(87px, 7.5vw); 
         margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
     }
+    /* PC版サブタイトル */
     .sub-logo { 
         font-family: 'Barmo', sans-serif; 
         font-size: max(24px, 1.6vw); 
         margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
     }
     
+    /* PC版メニュー位置 */
     .header-nav { margin-top: 35px; }
     .header-nav ul { display: flex; gap: 2vw; list-style: none; margin: 0; padding: 0; }
     .header-nav a { text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; transition: color 0.3s; }
@@ -163,7 +189,7 @@
         bottom: 0; right: 0;
         width: 60px; height: 60px;
         background: #fff;
-        border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; 
+        border-radius: 30px 0 27px 0; 
         z-index: 9999;
         cursor: pointer;
         align-items: center; justify-content: center;
@@ -179,15 +205,15 @@
     }
 
     /* スクロールダウン & キャッチコピー */
-    .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 calc(var(--frame-radius) - 3px); display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; z-index: 50; }
+    .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 23px; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; z-index: 50; }
     .scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
     .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; } .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
     .catch-copy { 
         position: absolute; bottom: 40px; right: 40px; text-align: right; 
         font-family: 'Dela Gothic One', sans-serif; 
-        /* デスクトップPC版 */
         font-size: clamp(100px, 11vw, 200px); 
         color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; 
         pointer-events: none;
@@ -197,15 +223,23 @@
 
     /* --- ターミナル（メニュー画面・スマホ用） --- */
     .terminal-container {
-        display: none; 
+        display: none; /* 初期状態は非表示 */
         position: absolute; bottom: 0; left: 0; width: 100%; 
+        
+        /* ★メニュー画面の下半分 */
         height: 50%;
+        
+        /* 背景色：ピンク */
         background-color: rgba(255, 66, 145, 0.95); 
+        
         color: #fff; 
         padding: 20px; box-sizing: border-box; 
         border-bottom-left-radius: calc(var(--frame-radius) - 3px); 
         border-bottom-right-radius: calc(var(--frame-radius) - 3px); 
-        z-index: 45; overflow-y: auto;
+        
+        /* z-indexをアイコン(40)より高く */
+        z-index: 55; 
+        overflow-y: auto;
         pointer-events: auto;
         flex-direction: column;
     }
@@ -230,17 +264,20 @@
 
     /* SNSアイコン */
     .sns-link-container {
-        margin-top: 20px;
+        /* ★修正：はみ出し原因となっていたマージンを削除 */
+        /* margin-top: 20px; */
         display: flex;
         justify-content: center;
         align-items: center;
+        /* 必要に応じて下部のパディングを調整 */
+        padding-bottom: 10px;
     }
     .sns-icon {
         display: inline-block;
         width: 30px; height: 30px;
         background: #fff; /* アイコンの色 */
-        mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>') no-repeat center;
-        -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>');
+        mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>') no-repeat center;
+        -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>');
         transition: transform 0.2s;
     }
     .sns-icon:hover { transform: scale(1.1); }
@@ -264,36 +301,18 @@
        ★レスポンシブ対応
        ========================================= */
     
-    /* ★修正：ノートパソコン専用調整（901px〜1400px） */
+    /* ノートパソコン (901px〜1400px) */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
-        /* アイコン: 0.6倍に縮小 */
-        :root { --icon-size: clamp(40px, 4.5vw, 80px); }
-        
-        /* 吹き出し: 0.6倍に縮小 */
-        .speech-bubble {
-            padding: 6px 12px; 
-            font-size: 10px;
-            top: -30px;
-            right: calc(var(--icon-size) - 15px);
-            border-radius: 15px;
-        }
-        .speech-bubble::after {
-            bottom: -6px; right: 20px;
-            border-width: 6px 0 0 6px;
-        }
-
-        /* タイトル: 0.7倍に縮小 */
-        .logo { font-size: clamp(35px, 4vw, 60px); }
-        .sub-logo { font-size: 14px; margin-left: 15px; }
-        
-        /* キャッチコピー: 0.7倍 */
-        .catch-copy { font-size: clamp(28px, 3.5vw, 50px); bottom: 30px; right: 30px; }
-        
+        :root { --icon-size: clamp(50px, 6vw, 110px); }
+        .speech-bubble { padding: 8px 15px; font-size: 12px; top: -40px; right: calc(var(--icon-size) - 20px); border-radius: 20px; }
+        .speech-bubble::after { bottom: -10px; right: 25px; border-width: 10px 0 0 10px; }
+        .logo { font-size: clamp(50px, 5vw, 80px); } .sub-logo { font-size: 16px; margin-left: 20px; }
+        .catch-copy { font-size: clamp(40px, 5vw, 70px); bottom: 30px; right: 30px; }
         .header-nav { margin-top: 5px; }
         .frame-header { padding-right: calc(var(--icon-size) + 40px); }
     }
 
-    /* スマホ（900px以下） */
+    /* スマホ (900px以下) */
     @media screen and (max-width: 900px) {
         :root { --icon-size: 80px; --frame-radius: 50px; }
         .bg-character { background-position: 100% center; }
@@ -304,26 +323,20 @@
         .header-nav { display: none; } 
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); }
         
-        /* ★修正：ハンバーガーボタンのクリック判定を確実にする */
-        .hamburger-btn { 
-            display: flex; border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; 
-            z-index: 99999; /* 最前面 */
-        }
+        /* ハンバーガーボタン */
+        .hamburger-btn { display: flex; border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; }
 
+        /* 吹き出し */
         .speech-bubble { display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px; }
         .speech-bubble::after {
-            top: auto; bottom: -12px; right: auto; left: 50%;
-            border-width: 12px 6px 0 6px; border-color: #fff transparent transparent transparent;
+            top: auto; bottom: -12px; left: 50%; right: auto;
+            border-width: 12px 8px 0 8px; 
+            border-color: #fff transparent transparent transparent;
             transform: translateX(-50%);
         }
 
-        /* ★修正：キャッチコピー0.8倍 */
         .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; }
-        
-        /* ★修正：ロード画面縮小 */
-        .loading-container { width: 300px; height: 200px; } 
-        .loading-title { font-size: 28px; }
-        
+        .loading-container { width: 300px; height: 200px; } .loading-title { font-size: 28px; }
         .scroll-down { border-radius: 0 30px 0 calc(var(--frame-radius) - 3px); }
         .frame { border-radius: var(--frame-radius); }
     }
@@ -339,20 +352,37 @@
         .speech-bubble { top: -20px; right: 15px; }
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 12vw; bottom: 20px; right: 80px; }
-        .loading-title { font-size: 24px; }
+        .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
         #bg-slideshow { gap: 0; }
     }
 
-    /* メニューオープン時のスタイル */
-    body.menu-open .icon-container { width: 100%; height: 50%; border-bottom-left-radius: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); border-top-left-radius: calc(var(--frame-radius) - 3px); border-left: none; border-bottom: 2px solid #fff; z-index: 40; }
-    body.menu-open .icon-image { object-position: center 20%; }
+    /* =========================================
+       ★メニューオープン時（Valuence風レイアウト）
+       ========================================= */
+    body.menu-open .icon-container { 
+        /* 上半分 50% */
+        width: 100%; height: 50%; 
+        border-bottom-left-radius: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); border-top-left-radius: calc(var(--frame-radius) - 3px); 
+        border-left: none; border-bottom: 2px solid #fff; z-index: 40; 
+    }
+    /* ★追加：メニューオープン時にキャラクター名を表示 */
+    body.menu-open .character-name {
+        opacity: 1;
+    }
+    
     body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
     body.menu-open .catch-copy, body.menu-open .speech-bubble, body.menu-open .logo, body.menu-open .sub-logo, body.menu-open .scroll-down { opacity: 0 !important; pointer-events: none; }
     body.menu-open .frame { background-color: transparent !important; }
     body.menu-open .hamburger-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     body.menu-open .hamburger-btn span:nth-child(2) { opacity: 0; }
     body.menu-open .hamburger-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-    body.menu-open .terminal-container { display: flex; animation: slideUp 0.5s ease forwards; }
+    
+    /* ターミナルを表示 */
+    body.menu-open .terminal-container { 
+        display: flex !important; 
+        animation: slideUp 0.5s ease forwards; 
+    }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
 </head>
 <body>
@@ -384,6 +414,7 @@
       
       <div class="icon-container">
          <img src="img/your-icon.jpg" alt="icon" class="icon-image" onerror="this.style.display='none'">
+         <span class="character-name">ニーナ</span>
       </div>
 
       <header class="frame-header">
@@ -488,8 +519,9 @@
             '20220610_IMG_0502の一部.jpg', '20240409_140842.jpg', '20240409_141055.jpg',
             '20240409_162116.jpg', '20240409_162159.jpg', '20240409_162405.jpg',
             '20240409_162836.jpg', '20240409_162853.jpg', '20240409_162858.jpg',
-            '20240409_163824.jpg', '20240409_163917.jpg', '20240409_164031.jpg',
-            '20240409_164053.jpg', '20240409_164236.jpg', '20240416_155234.jpg',
+            '20240409_163824.jpg', '20240409_163917.jpg', '20240409_163917.jpg',
+            '20240409_164031.jpg', '20240409_164053.jpg', '20240409_164236.jpg',
+            '20240416_155234.jpg',
             '20240528_140127.jpg', '20240528_140135.jpg', '20240623_114145.jpg',
             '20240705_183653.jpg', '20240705_201405.jpg'
         ];
@@ -499,12 +531,20 @@
         const ROW_COUNT = isMobile ? 12 : 8; 
         const duration = isMobile ? 500 : 300;
 
-        function shuffle(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         if (slidePhotos.length > 0) {
             for (let i = 0; i < ROW_COUNT; i++) {
-                const row = document.createElement('div'); row.className = 'slide-row';
-                const track = document.createElement('div'); track.className = 'slide-track';
+                const row = document.createElement('div');
+                row.className = 'slide-row';
+                const track = document.createElement('div');
+                track.className = 'slide-track';
                 if (i % 2 !== 0) track.style.animationDirection = 'reverse';
                 const finalDuration = duration + Math.random() * 50;
                 track.style.animationDuration = `${finalDuration}s`;
@@ -512,10 +552,15 @@
                 const rowImages = shuffle([...slidePhotos]); 
                 const displayImages = [...rowImages, ...rowImages, ...rowImages]; 
                 displayImages.forEach(filename => {
-                    const img = document.createElement('img'); img.src = `slide/${filename}`; img.className = 'slide-img'; img.alt = 'slide image'; img.onerror = () => { img.style.display = 'none'; };
+                    const img = document.createElement('img');
+                    img.src = `slide/${filename}`;
+                    img.className = 'slide-img';
+                    img.alt = 'slide image';
+                    img.onerror = () => { img.style.display = 'none'; };
                     track.appendChild(img);
                 });
-                row.appendChild(track); bgContainer.appendChild(row);
+                row.appendChild(track);
+                bgContainer.appendChild(row);
             }
         }
 
@@ -536,18 +581,29 @@
 
                 if (progress >= 100) {
                     clearInterval(interval);
+                    
                     setTimeout(() => {
                         loadingContent.classList.add("hidden");
                         loadingScreen.style.backgroundColor = "transparent";
                         loadingBorder.classList.add("expand");
+                        
                         setTimeout(() => {
                             loadingScreen.style.display = "none";
                             mainFrameGroup.classList.add("visible");
-                            if(character) character.style.opacity = 1;
+                            if(character) {
+                                character.style.opacity = 1;
+                                character.style.transition = "opacity 1.5s";
+                            }
                             startTypewriter();
                             if (typeof gsap !== 'undefined') {
-                                gsap.fromTo(".catch-copy", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.5 });
-                                gsap.fromTo(".highlight", { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.6 });
+                                gsap.fromTo(".catch-copy", 
+                                    { opacity: 0, y: 20 }, 
+                                    { opacity: 1, y: 0, duration: 0.8, delay: 0.5 }
+                                );
+                                gsap.fromTo(".highlight",
+                                    { x: -50, opacity: 0 },
+                                    { x: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.6 }
+                                );
                             }
                         }, 1000);
                     }, 500);
