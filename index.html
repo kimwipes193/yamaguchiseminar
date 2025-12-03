@@ -15,7 +15,9 @@
 
     /* --- 変数定義 --- */
     :root {
-        --icon-size: clamp(70px, 15vw, 260px);
+        /* ★修正1：ノートPCでの肥大化防止（15vw -> 11vw に縮小） */
+        /* 最小80px 〜 画面の11% 〜 最大220px */
+        --icon-size: clamp(80px, 11vw, 220px);
     }
 
     /* --- ベース設定 --- */
@@ -72,7 +74,9 @@
     /* --- フレーム --- */
     .frame-group {
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        width: 90vw; height: 90vh; z-index: 10; pointer-events: none;
+        width: 90vw; height: 90vh; z-index: 10; 
+        /* フレーム自体はクリックを通す */
+        pointer-events: none;
         opacity: 0; 
         transition: opacity 0.5s ease;
     }
@@ -101,20 +105,16 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し（PC用：サイズ1.3倍） */
+    /* 吹き出し（PC・デフォルト設定） */
     .speech-bubble {
         position: absolute; 
-        /* ★修正：位置を少し上に */
-        top: -65px; 
+        /* ★修正2：PC版の位置を少し下げる（-65px -> -40px） */
+        top: -40px; 
         right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
-        
-        /* ★修正：サイズを1.3倍に拡大 */
-        /* padding: 10px~15px -> 13px~20px */
-        padding: clamp(13px, 1.8vw, 20px) clamp(20px, 3.0vw, 33px); 
-        /* font-size: 12px~16px -> 16px~21px */
-        font-size: clamp(16px, 1.3vw, 21px); 
-        
+        /* デフォルトは少し大きめ（デスクトップ用） */
+        padding: 20px 35px; 
+        font-size: 21px; 
         border-radius: 40px;
         font-family: 'Barmo', sans-serif; font-weight: bold;
         white-space: nowrap; width: auto; min-width: 20px;
@@ -132,7 +132,7 @@
     @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     @keyframes floatBubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    /* ヘッダー（PC用） */
+    /* ヘッダー */
     .frame-header {
         position: absolute; top: 0; left: 0; width: 100%;
         padding: 30px calc(var(--icon-size) + 80px) 30px 40px;
@@ -143,21 +143,19 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
-    /* PC版タイトル */
+    /* PC版タイトル（可変） */
     .logo { 
-        font-size: max(80px, 6.8vw); 
+        font-size: clamp(50px, 6.8vw, 90px); /* 縮小調整 */
         margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
     }
-    /* PC版サブタイトル */
     .sub-logo { 
         font-family: 'Barmo', sans-serif; 
-        font-size: max(22px, 1.44vw); 
+        font-size: clamp(16px, 1.44vw, 24px); 
         margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
     }
     
     /* PC版メニュー位置 */
     .header-nav { margin-top: 10px; }
-    
     .header-nav ul { display: flex; gap: 2vw; list-style: none; margin: 0; padding: 0; }
     .header-nav a { text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; transition: color 0.3s; }
     .header-nav a:hover { color: #f9c74f; }
@@ -172,11 +170,13 @@
         width: 60px; height: 60px;
         background: #fff;
         border-radius: 30px 0 27px 0; 
-        z-index: 100;
+        /* ★修正3：z-indexを高くして最前面へ */
+        z-index: 200;
         cursor: pointer;
         align-items: center; justify-content: center;
         flex-direction: column;
         gap: 5px;
+        /* ★修正3：クリック判定を確実に有効化 */
         pointer-events: auto;
         border: none;
         outline: none;
@@ -186,14 +186,22 @@
         transition: transform 0.3s, opacity 0.3s;
     }
 
-    /* スクロールダウン & キャッチコピー */
+    /* スクロールダウン */
     .scroll-down { position: absolute; bottom: 0; left: 0; width: 60px; height: 160px; background: #fff; color: #333; border-radius: 0 30px 0 23px; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; }
     .scroll-text { writing-mode: vertical-rl; font-family: 'Barmo', sans-serif; font-size: 12px; letter-spacing: 2px; }
     .dots { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot.yellow { background: #f9c74f; } .dot.blue { background: #577590; } .dot.red { background: #f94144; }
 
-    .catch-copy { position: absolute; bottom: 40px; right: 40px; text-align: right; font-family: 'Dela Gothic One', sans-serif; font-size: max(40px, 6vw); color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; }
+    /* キャッチコピー */
+    .catch-copy { 
+        position: absolute; bottom: 40px; right: 40px; text-align: right; 
+        font-family: 'Dela Gothic One', sans-serif; 
+        font-size: clamp(40px, 6vw, 90px); 
+        color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; 
+        /* ★修正3：文字が重なってもボタンを押せるように透過 */
+        pointer-events: none;
+    }
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; }
 
@@ -206,12 +214,7 @@
     }
     #loading-screen.bg-hidden { background-color: transparent; }
     
-    .loading-container { 
-        position: relative; 
-        width: 600px; height: 400px;
-        display: flex; flex-direction: column; align-items: center; justify-content: center; 
-    }
-    
+    .loading-container { position: relative; width: 600px; height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .loading-border-draw {
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 100%; height: 100%; border: 4px solid #fff; border-radius: 20px; box-sizing: border-box;
@@ -241,14 +244,21 @@
     }
 
     /* =========================================
-       ★レスポンシブ対応（スマホ）
+       ★レスポンシブ対応
        ========================================= */
     
-    /* ノートパソコン調整（変更なし） */
+    /* ★修正1：ノートパソコン用調整（901px〜1400px） */
+    /* このサイズ帯では吹き出しを少し控えめにする */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
+        .speech-bubble {
+            padding: 15px 25px; 
+            font-size: 16px;
+            top: -55px;
+        }
         .header-nav { margin-top: 10px; }
     }
 
+    /* スマホ（900px以下） */
     @media screen and (max-width: 900px) {
         .bg-character {
             background-repeat: no-repeat;
@@ -264,27 +274,14 @@
             flex-direction: column; align-items: flex-start; gap: 10px;
         }
 
-        /* スマホ版サイズ */
-        .logo { 
-            font-size: 50px; 
-            letter-spacing: -0.1em; 
-        } 
-        .sub-logo { 
-            font-size: 16px; 
-            margin-left: 0; 
-        }
+        .logo { font-size: 50px; letter-spacing: -0.1em; } 
+        .sub-logo { font-size: 16px; margin-left: 0; }
 
-        /* スマホではメニューを確実に隠す */
+        /* メニューは初期非表示 */
         .header-nav { 
-            position: absolute; 
-            top: 45%; 
-            left: 0; 
-            width: 100%; 
-            opacity: 0; 
-            pointer-events: none; 
-            visibility: hidden; 
-            transition: opacity 0.5s ease, visibility 0.5s; 
-            z-index: 55;
+            position: absolute; top: 45%; left: 0; width: 100%; 
+            opacity: 0; pointer-events: none; visibility: hidden; 
+            transition: opacity 0.5s ease, visibility 0.5s; z-index: 55;
             margin-top: 0; 
         }
         .header-nav ul { flex-direction: column; align-items: flex-start; gap: 25px; padding-left: 40px; }
@@ -295,17 +292,11 @@
         .hamburger-btn { display: flex; }
 
         .speech-bubble {
-            display: flex;
-            top: -25px;  
-            right: 20px; 
-            padding: 8px 15px;
-            font-size: 10px;
+            display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px;
         }
         /* 尻尾：中央下 */
         .speech-bubble::after {
-            top: auto; 
-            bottom: -8px; 
-            right: auto; left: 50%;
+            top: auto; bottom: -8px; right: auto; left: 50%;
             border-width: 12px 12px 0 0; border-color: #fff transparent transparent transparent;
             transform: translateX(-50%) scaleX(-1);
         }
@@ -337,7 +328,7 @@
         #bg-slideshow { gap: 0; }
     }
 
-    /* メニューオープン時のスタイル */
+    /* メニューオープン時 */
     body.menu-open .icon-container { width: 100%; height: 40%; border-bottom-left-radius: 0; border-top-right-radius: 27px; border-left: none; border-bottom: 2px solid #fff; z-index: 40; }
     body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
     
@@ -350,10 +341,7 @@
         pointer-events: none; 
     }
     
-    /* メニュー背景：マゼンタ */
-    body.menu-open .frame { 
-        background-color: rgba(255, 66, 145, 0.95) !important; 
-    }
+    body.menu-open .frame { background-color: rgba(255, 66, 145, 0.95) !important; }
     
     body.menu-open .hamburger-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     body.menu-open .hamburger-btn span:nth-child(2) { opacity: 0; }
@@ -543,6 +531,20 @@
                 }
             }, 40);
         }
+
+        const menuBtn = document.getElementById('menu-btn');
+        if(menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                document.body.classList.toggle('menu-open');
+            });
+        }
+
+        const navLinks = document.querySelectorAll('.header-nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                document.body.classList.remove('menu-open');
+            });
+        });
         
         const typingTextSpan = document.getElementById('typing-text');
         const normalPhrases = [
