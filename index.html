@@ -103,10 +103,11 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* 吹き出し（デスクトップPC用） */
+    /* 吹き出し（PC用） */
     .speech-bubble {
         position: absolute; 
-        top: -60px; right: calc(var(--icon-size) - 40px);
+        top: -60px; 
+        right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
         padding: 20px 35px; font-size: 22px; 
         border-radius: 40px;
@@ -137,13 +138,14 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
+    /* デスクトップPC版 */
     .logo { 
-        font-size: max(87px, 7.5vw); /* デスクトップPC：前回の0.6倍維持 */
+        font-size: max(87px, 7.5vw); 
         margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
     }
     .sub-logo { 
         font-family: 'Barmo', sans-serif; 
-        font-size: max(24px, 1.6vw); /* デスクトップPC：前回の0.6倍維持 */
+        font-size: max(24px, 1.6vw); 
         margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
     }
     
@@ -185,7 +187,8 @@
     .catch-copy { 
         position: absolute; bottom: 40px; right: 40px; text-align: right; 
         font-family: 'Dela Gothic One', sans-serif; 
-        font-size: max(128px, 8.8vw); /* デスクトップPC：維持 */
+        /* デスクトップPC版 */
+        font-size: clamp(100px, 11vw, 200px); 
         color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; 
         pointer-events: none;
     }
@@ -210,9 +213,13 @@
     .terminal-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; }
     .terminal-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; } .red { background-color: #ff5f56; } .yellow { background-color: #ffbd2e; } .green { background-color: #27c93f; }
     .terminal-title { margin-left: auto; font-size: 12px; color: #fff; opacity: 0.8; font-family: 'Roboto Mono', monospace; }
-    .terminal-content { font-size: 13px; line-height: 1.6; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     
-    .terminal-menu-list { list-style: none; padding: 0; margin: 0; }
+    .terminal-content { 
+        font-size: 13px; line-height: 1.6; 
+        flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    
+    .terminal-menu-list { list-style: none; padding: 0; margin: 10px 0; }
     .terminal-menu-list li { margin-bottom: 8px; }
     .terminal-menu-list a { 
         color: #fff; text-decoration: none; font-size: 18px; 
@@ -231,7 +238,7 @@
     .sns-icon {
         display: inline-block;
         width: 30px; height: 30px;
-        background: #fff; 
+        background: #fff; /* アイコンの色 */
         mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>') no-repeat center;
         -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>');
         transition: transform 0.2s;
@@ -259,32 +266,31 @@
     
     /* ★修正：ノートパソコン専用調整（901px〜1400px） */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
-        /* アイコンサイズ：0.6倍（3.6vw） */
-        :root {
-            --icon-size: clamp(30px, 3.6vw, 72px);
-        }
+        /* アイコン: 0.6倍に縮小 */
+        :root { --icon-size: clamp(40px, 4.5vw, 80px); }
         
-        /* 吹き出し：コンパクトに */
+        /* 吹き出し: 0.6倍に縮小 */
         .speech-bubble {
-            padding: 5px 9px; 
+            padding: 6px 12px; 
             font-size: 10px;
-            top: -25px;
-            right: calc(var(--icon-size) - 10px);
-            border-radius: 12px;
+            top: -30px;
+            right: calc(var(--icon-size) - 15px);
+            border-radius: 15px;
         }
         .speech-bubble::after {
-            bottom: -6px; right: 15px;
+            bottom: -6px; right: 20px;
             border-width: 6px 0 0 6px;
         }
 
-        /* キャッチコピー：0.7倍 */
-        .catch-copy { 
-            font-size: clamp(28px, 3.5vw, 50px); 
-            bottom: 30px; right: 30px; 
-        }
+        /* タイトル: 0.7倍に縮小 */
+        .logo { font-size: clamp(35px, 4vw, 60px); }
+        .sub-logo { font-size: 14px; margin-left: 15px; }
+        
+        /* キャッチコピー: 0.7倍 */
+        .catch-copy { font-size: clamp(28px, 3.5vw, 50px); bottom: 30px; right: 30px; }
         
         .header-nav { margin-top: 5px; }
-        .frame-header { padding-right: calc(var(--icon-size) + 30px); }
+        .frame-header { padding-right: calc(var(--icon-size) + 40px); }
     }
 
     /* スマホ（900px以下） */
@@ -297,11 +303,27 @@
         .logo { font-size: 50px; letter-spacing: -0.1em; } .sub-logo { font-size: 16px; margin-left: 0; }
         .header-nav { display: none; } 
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); }
-        .hamburger-btn { display: flex; border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; }
+        
+        /* ★修正：ハンバーガーボタンのクリック判定を確実にする */
+        .hamburger-btn { 
+            display: flex; border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; 
+            z-index: 99999; /* 最前面 */
+        }
+
         .speech-bubble { display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px; }
-        .speech-bubble::after { top: auto; bottom: -12px; right: auto; left: 50%; border-width: 12px 6px 0 6px; border-color: #fff transparent transparent transparent; transform: translateX(-50%); }
+        .speech-bubble::after {
+            top: auto; bottom: -12px; right: auto; left: 50%;
+            border-width: 12px 6px 0 6px; border-color: #fff transparent transparent transparent;
+            transform: translateX(-50%);
+        }
+
+        /* ★修正：キャッチコピー0.8倍 */
         .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; }
-        .loading-container { width: 300px; height: 200px; } .loading-title { font-size: 28px; }
+        
+        /* ★修正：ロード画面縮小 */
+        .loading-container { width: 300px; height: 200px; } 
+        .loading-title { font-size: 28px; }
+        
         .scroll-down { border-radius: 0 30px 0 calc(var(--frame-radius) - 3px); }
         .frame { border-radius: var(--frame-radius); }
     }
@@ -317,7 +339,7 @@
         .speech-bubble { top: -20px; right: 15px; }
         .scroll-down { width: 40px; height: 120px; }
         .catch-copy { font-size: 12vw; bottom: 20px; right: 80px; }
-        .loading-title { font-size: 24px; } .loading-subtitle { font-size: 10px; }
+        .loading-title { font-size: 24px; }
         #bg-slideshow { gap: 0; }
     }
 
@@ -352,7 +374,7 @@
   <div class="frame-group" id="main-frame-group">
     <div class="frame">
       
-      <button class="hamburger-btn" id="menu-btn" onclick="document.body.classList.toggle('menu-open')">
+      <button class="hamburger-btn" id="menu-btn" onclick="document.body.classList.toggle('menu-open'); if(document.body.classList.contains('menu-open')) startTerminalMenu();">
         <span></span><span></span><span></span>
       </button>
 
@@ -407,7 +429,6 @@
                   <li><a href="#activity"><span class="command-prompt">></span> ACTIVITY JOURNAL <span class="terminal-menu-sub">活動記録</span></a></li>
                   <li><a href="#contact"><span class="command-prompt">></span> INQUIRY <span class="terminal-menu-sub">お問い合わせ</span></a></li>
               </ul>
-              
               <div class="sns-link-container">
                  <a href="https://www.instagram.com/yamaguchikenji_zemi?igsh=MWM0Z3JnYW1xaGo1Yg==" target="_blank" class="sns-icon"></a>
               </div>
@@ -467,9 +488,8 @@
             '20220610_IMG_0502の一部.jpg', '20240409_140842.jpg', '20240409_141055.jpg',
             '20240409_162116.jpg', '20240409_162159.jpg', '20240409_162405.jpg',
             '20240409_162836.jpg', '20240409_162853.jpg', '20240409_162858.jpg',
-            '20240409_163824.jpg', '20240409_163917.jpg', '20240409_163917.jpg',
-            '20240409_164031.jpg', '20240409_164053.jpg', '20240409_164236.jpg',
-            '20240416_155234.jpg',
+            '20240409_163824.jpg', '20240409_163917.jpg', '20240409_164031.jpg',
+            '20240409_164053.jpg', '20240409_164236.jpg', '20240416_155234.jpg',
             '20240528_140127.jpg', '20240528_140135.jpg', '20240623_114145.jpg',
             '20240705_183653.jpg', '20240705_201405.jpg'
         ];
@@ -479,20 +499,12 @@
         const ROW_COUNT = isMobile ? 12 : 8; 
         const duration = isMobile ? 500 : 300;
 
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
+        function shuffle(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
 
         if (slidePhotos.length > 0) {
             for (let i = 0; i < ROW_COUNT; i++) {
-                const row = document.createElement('div');
-                row.className = 'slide-row';
-                const track = document.createElement('div');
-                track.className = 'slide-track';
+                const row = document.createElement('div'); row.className = 'slide-row';
+                const track = document.createElement('div'); track.className = 'slide-track';
                 if (i % 2 !== 0) track.style.animationDirection = 'reverse';
                 const finalDuration = duration + Math.random() * 50;
                 track.style.animationDuration = `${finalDuration}s`;
@@ -500,15 +512,10 @@
                 const rowImages = shuffle([...slidePhotos]); 
                 const displayImages = [...rowImages, ...rowImages, ...rowImages]; 
                 displayImages.forEach(filename => {
-                    const img = document.createElement('img');
-                    img.src = `slide/${filename}`;
-                    img.className = 'slide-img';
-                    img.alt = 'slide image';
-                    img.onerror = () => { img.style.display = 'none'; };
+                    const img = document.createElement('img'); img.src = `slide/${filename}`; img.className = 'slide-img'; img.alt = 'slide image'; img.onerror = () => { img.style.display = 'none'; };
                     track.appendChild(img);
                 });
-                row.appendChild(track);
-                bgContainer.appendChild(row);
+                row.appendChild(track); bgContainer.appendChild(row);
             }
         }
 
@@ -529,30 +536,18 @@
 
                 if (progress >= 100) {
                     clearInterval(interval);
-                    
                     setTimeout(() => {
                         loadingContent.classList.add("hidden");
                         loadingScreen.style.backgroundColor = "transparent";
                         loadingBorder.classList.add("expand");
-                        
                         setTimeout(() => {
                             loadingScreen.style.display = "none";
                             mainFrameGroup.classList.add("visible");
-                            if(character) {
-                                character.style.opacity = 1;
-                                character.style.transition = "opacity 1.5s";
-                            }
+                            if(character) character.style.opacity = 1;
                             startTypewriter();
-                            
                             if (typeof gsap !== 'undefined') {
-                                gsap.fromTo(".catch-copy", 
-                                    { opacity: 0, y: 20 }, 
-                                    { opacity: 1, y: 0, duration: 0.8, delay: 0.5 }
-                                );
-                                gsap.fromTo(".highlight",
-                                    { x: -50, opacity: 0 },
-                                    { x: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.6 }
-                                );
+                                gsap.fromTo(".catch-copy", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.5 });
+                                gsap.fromTo(".highlight", { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.6 });
                             }
                         }, 1000);
                     }, 500);
@@ -561,13 +556,8 @@
         }
         
         const typingTextSpan = document.getElementById('typing-text');
-        const normalPhrases = [
-            "エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！",
-            "データで未来を予測する", "お菓子パーティもあるよ", "本気で学びたい人、募集"
-        ];
-        const rarePhrases = [
-            "君の入ゼミを待っていた！", "SSR：教授のスマイル", "隠しコマンド...はないよ", "今日のラッキーカラーはピンク！"
-        ];
+        const normalPhrases = ["エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！", "データで未来を予測する", "お菓子パーティもあるよ", "本気で学びたい人、募集"];
+        const rarePhrases = ["君の入ゼミを待っていた！", "SSR：教授のスマイル", "隠しコマンド...はないよ", "今日のラッキーカラーはピンク！"];
         let currentPhrase = "", charIndex = 0;
 
         function startTypewriter() { if (!typingTextSpan) return; typeNextPhrase(); }
@@ -576,9 +566,7 @@
             if (Math.random() < 0.05) return rarePhrases[Math.floor(Math.random() * rarePhrases.length)];
             let candidatePhrases = [...normalPhrases];
             const now = new Date();
-            const month = now.getMonth() + 1;
-            const date = now.getDate();
-            const hour = now.getHours();
+            const month = now.getMonth() + 1; const date = now.getDate(); const hour = now.getHours();
             if (month === 1 && date <= 7) candidatePhrases.push("あけましておめでとう！", "今年もよろしくね");
             if (month === 12 && (date === 24 || date === 25)) candidatePhrases.push("メリークリスマス！");
             if (hour >= 23 || hour <= 4) candidatePhrases.push("こんな夜遅くにありがとう…", "夜更かしはほどほどにね");
@@ -587,17 +575,12 @@
         }
 
         function typeNextPhrase() {
-            currentPhrase = getNextPhrase();
-            charIndex = 0;
-            typingTextSpan.textContent = ""; 
-            typeLoop();
+            currentPhrase = getNextPhrase(); charIndex = 0; typingTextSpan.textContent = ""; typeLoop();
         }
 
         function typeLoop() {
             if (charIndex < currentPhrase.length) {
-                typingTextSpan.textContent += currentPhrase.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeLoop, 40);
+                typingTextSpan.textContent += currentPhrase.charAt(charIndex); charIndex++; setTimeout(typeLoop, 40);
             } else {
                 setTimeout(typeNextPhrase, 6000);
             }
