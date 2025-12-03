@@ -83,8 +83,6 @@
         position: relative; width: 100%; height: 100%;
         border: 3px solid #fff; border-radius: var(--frame-radius);
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        /* overflow: hidden は削除（吹き出しのため） */
-        /* 代わりに各要素で角丸を管理 */
         transition: background-color 0.3s;
     }
 
@@ -107,7 +105,7 @@
     /* 吹き出し（PC用） */
     .speech-bubble {
         position: absolute; 
-        top: -85px; right: calc(var(--icon-size) - 40px);
+        top: -60px; right: calc(var(--icon-size) - 40px);
         background: #fff; color: #333;
         padding: 20px 35px; font-size: 22px; 
         border-radius: 40px;
@@ -179,7 +177,7 @@
     .catch-copy { 
         position: absolute; bottom: 40px; right: 40px; text-align: right; 
         font-family: 'Dela Gothic One', sans-serif; 
-        font-size: clamp(100px, 11vw, 200px); 
+        font-size: max(128px, 8.8vw); 
         color: #fff; z-index: 5; line-height: 0.9; text-shadow: 3px 3px 0px rgba(255, 0, 128, 0.6); opacity: 0; transition: opacity 0.3s; 
         pointer-events: none;
     }
@@ -188,23 +186,31 @@
 
     /* --- ターミナル（メニュー画面・スマホ用） --- */
     .terminal-container {
-        display: none; /* 初期非表示 */
+        display: none; 
         position: absolute; bottom: 0; left: 0; width: 100%; 
-        /* ★修正：高さを50%に設定（アイコンと合わせて100%） */
         height: 50%;
-        
-        /* ★修正：背景をピンクに */
         background-color: rgba(255, 66, 145, 0.95); 
-        
         color: #fff; 
         padding: 20px; box-sizing: border-box; 
         border-bottom-left-radius: calc(var(--frame-radius) - 3px); 
         border-bottom-right-radius: calc(var(--frame-radius) - 3px); 
         z-index: 45; overflow-y: auto;
         pointer-events: auto;
+        /* Flexboxで中身を配置 */
+        flex-direction: column;
     }
     
-    .terminal-menu-list { list-style: none; padding: 0; margin: 10px 0; }
+    .terminal-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; }
+    .terminal-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; } .red { background-color: #ff5f56; } .yellow { background-color: #ffbd2e; } .green { background-color: #27c93f; }
+    .terminal-title { margin-left: auto; font-size: 12px; color: #fff; opacity: 0.8; font-family: 'Roboto Mono', monospace; }
+    
+    /* コンテンツエリア：残りの高さを埋める */
+    .terminal-content { 
+        font-size: 13px; line-height: 1.6; 
+        flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    
+    .terminal-menu-list { list-style: none; padding: 0; margin: 0; }
     .terminal-menu-list li { margin-bottom: 8px; }
     .terminal-menu-list a { 
         color: #fff; text-decoration: none; font-size: 18px; 
@@ -212,11 +218,23 @@
     }
     .terminal-menu-list a:hover { color: #ffff00; }
     .terminal-menu-sub { font-size: 12px; color: rgba(255,255,255,0.8); margin-left: 10px; font-family: 'Barmo', sans-serif; }
-    
-    /* ターミナルヘッダー（飾り） */
-    .terminal-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; }
-    .terminal-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; } .red { background-color: #ff5f56; } .yellow { background-color: #ffbd2e; } .green { background-color: #27c93f; }
-    .terminal-title { margin-left: auto; font-size: 12px; color: #fff; opacity: 0.8; font-family: 'Roboto Mono', monospace; }
+
+    /* ★追加：SNSアイコン */
+    .sns-link-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .sns-icon {
+        display: inline-block;
+        width: 30px; height: 30px;
+        background: #fff; /* アイコンの色 */
+        mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>') no-repeat center;
+        -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>');
+        transition: transform 0.2s;
+    }
+    .sns-icon:hover { transform: scale(1.1); }
 
     /* ロード画面 */
     #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FF4291; z-index: 9999; display: flex; justify-content: center; align-items: center; color: white; transition: background-color 0.5s ease; }
@@ -251,27 +269,27 @@
     /* スマホ (900px以下) */
     @media screen and (max-width: 900px) {
         :root { --icon-size: 80px; --frame-radius: 50px; }
-        .bg-character { background-position: 100% center; }
+        .bg-character { background-position: 95% center; }
         .frame-group { width: 88vw; height: 88vh; }
         .loading-border-draw.expand { width: 88vw; height: 88vh; }
         .frame-header { padding: 20px; padding-right: 90px; flex-direction: column; align-items: flex-start; gap: 10px; }
         .logo { font-size: 50px; letter-spacing: -0.1em; } .sub-logo { font-size: 16px; margin-left: 0; }
-        .header-nav { display: none; } /* メニューリストは初期非表示 */
+        .header-nav { display: none; } 
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); }
         .hamburger-btn { display: flex; border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; }
-
-        /* 吹き出し修正 */
         .speech-bubble { display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px; }
-        /* ★修正：尻尾（下向き） */
         .speech-bubble::after {
-            top: auto; bottom: -12px; left: 50%; right: auto;
-            border-width: 12px 8px 0 8px; /* 下向き三角 */
-            border-color: #fff transparent transparent transparent;
+            top: auto; bottom: -12px; right: auto; left: 50%;
+            border-width: 12px 6px 0 6px; border-color: #fff transparent transparent transparent;
             transform: translateX(-50%);
         }
-
         .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; }
-        .loading-container { width: 100%; } .loading-title { font-size: 28px; }
+        
+        /* ★修正：スマホ版ロード画面を小さく */
+        .loading-container { width: 300px; height: 200px; } 
+        .loading-title { font-size: 28px; }
+        .scroll-down { border-radius: 0 30px 0 calc(var(--frame-radius) - 3px); }
+        .frame { border-radius: var(--frame-radius); }
     }
 
     @media screen and (max-width: 480px) {
@@ -289,34 +307,27 @@
         #bg-slideshow { gap: 0; }
     }
 
-    /* =========================================
-       ★メニューオープン時（Valuence風レイアウト）
-       ========================================= */
-    body.menu-open .icon-container {
-        /* ★修正：上半分（50%）を占有 */
+    /* メニューオープン時のスタイル */
+    body.menu-open .icon-container { 
         width: 100%; height: 50%; 
-        border-bottom-left-radius: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); 
-        border-left: none; border-bottom: 2px solid #fff; 
-        z-index: 40;
+        border-bottom-left-radius: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); /* ★修正：角丸合体 */
+        /* ★修正：左上の角丸を追加 */
+        border-top-left-radius: calc(var(--frame-radius) - 3px);
+        
+        border-left: none; border-bottom: 2px solid #fff; z-index: 40; 
     }
-    /* ★修正：拡大アイコン画像の表示位置（潰さない） */
-    body.menu-open .icon-image {
-        object-fit: cover;
-        object-position: center 20%; /* 顔のあたりを表示 */
-    }
-    
+    body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
     body.menu-open .catch-copy, body.menu-open .speech-bubble, body.menu-open .logo, body.menu-open .sub-logo, body.menu-open .scroll-down { opacity: 0 !important; pointer-events: none; }
-    
-    /* フレーム背景は透明（ターミナルが背景色を持つため） */
-    body.menu-open .frame { background-color: transparent !important; }
-    
+    body.menu-open .frame { background-color: rgba(255, 66, 145, 0.95) !important; }
     body.menu-open .hamburger-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     body.menu-open .hamburger-btn span:nth-child(2) { opacity: 0; }
     body.menu-open .hamburger-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     
-    /* ターミナル表示（下半分） */
-    body.menu-open .terminal-container { display: block; animation: slideUp 0.5s ease forwards; }
-    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    /* メニュー時：ターミナル表示（Flexbox） */
+    body.menu-open .terminal-container { 
+        display: flex; /* flexにしてSNSを下へ */
+        animation: slideUp 0.5s ease forwards; 
+    }
   </style>
 </head>
 <body>
@@ -393,6 +404,10 @@
                   <li><a href="#activity"><span class="command-prompt">></span> ACTIVITY JOURNAL <span class="terminal-menu-sub">活動記録</span></a></li>
                   <li><a href="#contact"><span class="command-prompt">></span> INQUIRY <span class="terminal-menu-sub">お問い合わせ</span></a></li>
               </ul>
+              
+              <div class="sns-link-container">
+                 <a href="https://www.instagram.com/yamaguchikenji_zemi?igsh=MWM0Z3JnYW1xaGo1Yg==" target="_blank" class="sns-icon"></a>
+              </div>
           </div>
       </div>
 
@@ -406,7 +421,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <script>
-    // メニュー開閉処理
     function toggleMenu() {
         document.body.classList.toggle('menu-open');
         if (document.body.classList.contains('menu-open')) {
@@ -461,12 +475,20 @@
         const ROW_COUNT = isMobile ? 12 : 8; 
         const duration = isMobile ? 500 : 300;
 
-        function shuffle(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         if (slidePhotos.length > 0) {
             for (let i = 0; i < ROW_COUNT; i++) {
-                const row = document.createElement('div'); row.className = 'slide-row';
-                const track = document.createElement('div'); track.className = 'slide-track';
+                const row = document.createElement('div');
+                row.className = 'slide-row';
+                const track = document.createElement('div');
+                track.className = 'slide-track';
                 if (i % 2 !== 0) track.style.animationDirection = 'reverse';
                 const finalDuration = duration + Math.random() * 50;
                 track.style.animationDuration = `${finalDuration}s`;
@@ -474,10 +496,15 @@
                 const rowImages = shuffle([...slidePhotos]); 
                 const displayImages = [...rowImages, ...rowImages, ...rowImages]; 
                 displayImages.forEach(filename => {
-                    const img = document.createElement('img'); img.src = `slide/${filename}`; img.className = 'slide-img'; img.alt = 'slide image'; img.onerror = () => { img.style.display = 'none'; };
+                    const img = document.createElement('img');
+                    img.src = `slide/${filename}`;
+                    img.className = 'slide-img';
+                    img.alt = 'slide image';
+                    img.onerror = () => { img.style.display = 'none'; };
                     track.appendChild(img);
                 });
-                row.appendChild(track); bgContainer.appendChild(row);
+                row.appendChild(track);
+                bgContainer.appendChild(row);
             }
         }
 
@@ -498,18 +525,29 @@
 
                 if (progress >= 100) {
                     clearInterval(interval);
+                    
                     setTimeout(() => {
                         loadingContent.classList.add("hidden");
                         loadingScreen.style.backgroundColor = "transparent";
                         loadingBorder.classList.add("expand");
+                        
                         setTimeout(() => {
                             loadingScreen.style.display = "none";
                             mainFrameGroup.classList.add("visible");
-                            if(character) character.style.opacity = 1;
+                            if(character) {
+                                character.style.opacity = 1;
+                                character.style.transition = "opacity 1.5s";
+                            }
                             startTypewriter();
                             if (typeof gsap !== 'undefined') {
-                                gsap.fromTo(".catch-copy", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.5 });
-                                gsap.fromTo(".highlight", { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.6 });
+                                gsap.fromTo(".catch-copy", 
+                                    { opacity: 0, y: 20 }, 
+                                    { opacity: 1, y: 0, duration: 0.8, delay: 0.5 }
+                                );
+                                gsap.fromTo(".highlight",
+                                    { x: -50, opacity: 0 },
+                                    { x: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.6 }
+                                );
                             }
                         }, 1000);
                     }, 500);
@@ -518,8 +556,13 @@
         }
         
         const typingTextSpan = document.getElementById('typing-text');
-        const normalPhrases = ["エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！", "データで未来を予測する", "お菓子パーティもあるよ", "本気で学びたい人、募集"];
-        const rarePhrases = ["君の入ゼミを待っていた！", "SSR：教授のスマイル", "隠しコマンド...はないよ", "今日のラッキーカラーはピンク！"];
+        const normalPhrases = [
+            "エントリーはこちらから", "ヤマグチゼミへようこそ", "文系・理系問いません！",
+            "データで未来を予測する", "お菓子パーティもあるよ", "本気で学びたい人、募集"
+        ];
+        const rarePhrases = [
+            "君の入ゼミを待っていた！", "SSR：教授のスマイル", "隠しコマンド...はないよ", "今日のラッキーカラーはピンク！"
+        ];
         let currentPhrase = "", charIndex = 0;
 
         function startTypewriter() { if (!typingTextSpan) return; typeNextPhrase(); }
@@ -528,7 +571,9 @@
             if (Math.random() < 0.05) return rarePhrases[Math.floor(Math.random() * rarePhrases.length)];
             let candidatePhrases = [...normalPhrases];
             const now = new Date();
-            const month = now.getMonth() + 1; const date = now.getDate(); const hour = now.getHours();
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const hour = now.getHours();
             if (month === 1 && date <= 7) candidatePhrases.push("あけましておめでとう！", "今年もよろしくね");
             if (month === 12 && (date === 24 || date === 25)) candidatePhrases.push("メリークリスマス！");
             if (hour >= 23 || hour <= 4) candidatePhrases.push("こんな夜遅くにありがとう…", "夜更かしはほどほどにね");
@@ -537,12 +582,17 @@
         }
 
         function typeNextPhrase() {
-            currentPhrase = getNextPhrase(); charIndex = 0; typingTextSpan.textContent = ""; typeLoop();
+            currentPhrase = getNextPhrase();
+            charIndex = 0;
+            typingTextSpan.textContent = ""; 
+            typeLoop();
         }
 
         function typeLoop() {
             if (charIndex < currentPhrase.length) {
-                typingTextSpan.textContent += currentPhrase.charAt(charIndex); charIndex++; setTimeout(typeLoop, 40);
+                typingTextSpan.textContent += currentPhrase.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeLoop, 40);
             } else {
                 setTimeout(typeNextPhrase, 6000);
             }
