@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ヤマグチゼミ | AI & Data</title>
   
-  <link rel="icon" href="img/dotnina.png" type="image/png">
-  
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,8 +16,9 @@
     @font-face { font-family: 'Dela Gothic One'; src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); }
     @font-face { font-family: 'CHILK'; src: url('fonts/CHILK___.woff2') format('woff2'); }
 
-    /* --- 変数定義 --- */
+    /* --- 変数定義（デスクトップPC基準） --- */
     :root {
+        /* デスクトップ用（1401px以上）は大きく */
         --icon-size: clamp(100px, 15vw, 260px);
         --frame-radius: 30px;
     }
@@ -115,7 +114,7 @@
         opacity: 0; pointer-events: none; transition: opacity 0.3s ease 0.3s; z-index: 60;
     }
 
-    /* 吹き出し（PC用） */
+    /* 吹き出し（デスクトップPC用） */
     .speech-bubble {
         position: absolute; 
         top: -30px; 
@@ -150,13 +149,14 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
+    /* デスクトップPC版（0.7倍設定） */
     .logo { 
-        font-size: max(87px, 7.5vw); 
+        font-size: max(81px, 7vw); 
         margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
     }
     .sub-logo { 
         font-family: 'Barmo', sans-serif; 
-        font-size: max(24px, 1.6vw); 
+        font-size: max(22px, 1.5vw); 
         margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
     }
     
@@ -202,8 +202,8 @@
     .terminal-container {
         display: none; 
         position: absolute; bottom: 0; left: 0; width: 100%; 
-        height: 50%; /* 下半分 */
-        background-color: rgba(255, 66, 145, 0.95); /* ピンク */
+        height: 50%; 
+        background-color: rgba(255, 66, 145, 0.95); 
         color: #fff; 
         padding: 20px; box-sizing: border-box; 
         border-bottom-left-radius: calc(var(--frame-radius) - 3px); 
@@ -245,18 +245,37 @@
        ★レスポンシブ対応
        ========================================= */
     
-    /* ノートパソコン (901px〜1400px) */
+    /* ★修正：ノートパソコン専用調整（901px〜1400px） */
+    /* ここでサイズをしっかり小さくして、巨大化を防ぐ */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
-        :root { --icon-size: clamp(50px, 7vw, 110px); }
-        .speech-bubble { padding: 8px 15px; font-size: 12px; top: -40px; right: calc(var(--icon-size) - 20px); border-radius: 20px; }
-        .speech-bubble::after { bottom: -10px; right: 25px; border-width: 10px 0 0 10px; }
-        .logo { font-size: clamp(65px, 6.5vw, 104px); } .sub-logo { font-size: 21px; margin-left: 20px; }
-        .catch-copy { font-size: clamp(52px, 6.5vw, 91px); bottom: 30px; right: 30px; }
+        /* アイコンサイズ：0.6倍程度に */
+        :root {
+            --icon-size: clamp(50px, 7vw, 110px);
+        }
+        
+        /* 吹き出し：文字サイズ12px、余白縮小、位置調整 */
+        .speech-bubble {
+            padding: 8px 15px; 
+            font-size: 12px;
+            top: -40px;
+            right: calc(var(--icon-size) - 20px);
+            border-radius: 20px;
+        }
+        .speech-bubble::after {
+            bottom: -8px; right: 25px;
+            border-width: 8px 0 0 8px;
+        }
+
+        /* タイトル：デスクトップ設定（巨大）を上書きしてノートPCサイズに */
+        .logo { font-size: clamp(40px, 5vw, 70px); }
+        .sub-logo { font-size: 14px; margin-left: 15px; }
+        .catch-copy { font-size: clamp(36px, 5vw, 60px); bottom: 30px; right: 30px; }
+        
         .header-nav { margin-top: 5px; }
         .frame-header { padding-right: calc(var(--icon-size) + 40px); }
     }
 
-    /* スマホ (900px以下) */
+    /* スマホ（900px以下） */
     @media screen and (max-width: 900px) {
         :root { --icon-size: 80px; --frame-radius: 50px; }
         .bg-character { background-position: 100% center; }
