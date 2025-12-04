@@ -14,10 +14,9 @@
     @font-face { font-family: 'Senobi Gothic'; src: url('fonts/Senobi-Gothic-Bold.woff2') format('woff2'); }
     @font-face { font-family: 'Barmo'; src: url('fonts/barmo-webfont.woff2') format('woff2'); }
     @font-face { font-family: 'Dela Gothic One'; src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); }
-    /* ★修正：パスを fonts/ に統一 */
     @font-face { font-family: 'CHILK'; src: url('fonts/CHILK___.woff2') format('woff2'); }
 
-    /* --- 変数定義 --- */
+    /* --- 変数定義（基本はデスクトップPC用） --- */
     :root {
         --icon-size: clamp(100px, 15vw, 260px);
         --frame-radius: 30px;
@@ -105,23 +104,15 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* ★修正：キャラクター名（ニーナ） */
+    /* キャラクター名 */
     .character-name {
-        position: absolute;
-        /* メニューオープン時に表示される位置（右下） */
-        bottom: 10px; 
-        right: 20px;
-        font-family: 'CHILK', sans-serif; /* 新フォント */
-        font-size: 40px;
-        color: #fff;
-        text-shadow: 2px 2px 0px #FF4291; /* 視認性アップ */
-        opacity: 0; /* 通常時は非表示 */
-        pointer-events: none;
-        transition: opacity 0.3s ease 0.3s; /* 遅延表示 */
-        z-index: 60;
+        position: absolute; bottom: 10px; right: 20px;
+        font-family: 'CHILK', sans-serif; font-size: 40px; color: #fff;
+        text-shadow: 2px 2px 0px #FF4291;
+        opacity: 0; pointer-events: none; transition: opacity 0.3s ease 0.3s; z-index: 60;
     }
 
-    /* 吹き出し（PC用） */
+    /* 吹き出し（PCデフォルト） */
     .speech-bubble {
         position: absolute; 
         top: -60px; right: calc(var(--icon-size) - 40px);
@@ -175,19 +166,12 @@
     /* ハンバーガーボタン */
     .hamburger-btn {
         display: none;
-        position: absolute;
-        bottom: 0; right: 0;
-        width: 60px; height: 60px;
-        background: #fff;
+        position: absolute; bottom: 0; right: 0;
+        width: 60px; height: 60px; background: #fff;
         border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; 
-        z-index: 9999;
-        cursor: pointer;
-        align-items: center; justify-content: center;
-        flex-direction: column;
-        gap: 5px;
-        pointer-events: auto;
-        border: none;
-        outline: none;
+        z-index: 9999; cursor: pointer;
+        align-items: center; justify-content: center; flex-direction: column; gap: 5px;
+        pointer-events: auto; border: none; outline: none;
     }
     .hamburger-btn span {
         display: block; width: 24px; height: 2px; background-color: #333;
@@ -210,52 +194,26 @@
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; display: inline-block; opacity: 0; }
 
-    /* --- ターミナル（メニュー画面・スマホ用） --- */
+    /* ターミナル */
     .terminal-container {
-        display: none; 
-        position: absolute; bottom: 0; left: 0; width: 100%; 
-        height: 50%;
-        background-color: rgba(255, 66, 145, 0.95); 
-        color: #fff; 
+        display: none; position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+        background-color: rgba(255, 66, 145, 0.95); color: #fff; 
         padding: 20px; box-sizing: border-box; 
         border-bottom-left-radius: calc(var(--frame-radius) - 3px); 
         border-bottom-right-radius: calc(var(--frame-radius) - 3px); 
-        z-index: 45; overflow-y: auto;
-        pointer-events: auto;
-        flex-direction: column;
+        z-index: 45; overflow-y: auto; pointer-events: auto; flex-direction: column;
     }
-    
     .terminal-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; }
     .terminal-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; } .red { background-color: #ff5f56; } .yellow { background-color: #ffbd2e; } .green { background-color: #27c93f; }
     .terminal-title { margin-left: auto; font-size: 12px; color: #fff; opacity: 0.8; font-family: 'Roboto Mono', monospace; }
-    
-    .terminal-content { 
-        font-size: 13px; line-height: 1.6; 
-        flex: 1; display: flex; flex-direction: column; justify-content: space-between;
-    }
-    
+    .terminal-content { font-size: 13px; line-height: 1.6; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .terminal-menu-list { list-style: none; padding: 0; margin: 10px 0; }
     .terminal-menu-list li { margin-bottom: 8px; }
-    .terminal-menu-list a { 
-        color: #fff; text-decoration: none; font-size: 18px; 
-        font-weight: bold; font-family: 'Barmo', sans-serif; transition: color 0.2s; 
-    }
+    .terminal-menu-list a { color: #fff; text-decoration: none; font-size: 18px; font-weight: bold; font-family: 'Barmo', sans-serif; transition: color 0.2s; }
     .terminal-menu-list a:hover { color: #ffff00; }
     .terminal-menu-sub { font-size: 12px; color: rgba(255,255,255,0.8); margin-left: 10px; font-family: 'Barmo', sans-serif; }
-
-    /* ★修正：SNSアイコン（Font Awesomeを使用） */
-    .sns-link-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-bottom: 10px;
-    }
-    .sns-icon {
-        color: #fff;
-        font-size: 30px;
-        text-decoration: none;
-        transition: transform 0.2s;
-    }
+    .sns-link-container { display: flex; justify-content: center; align-items: center; padding-bottom: 10px; }
+    .sns-icon { color: #fff; font-size: 30px; text-decoration: none; transition: transform 0.2s; }
     .sns-icon:hover { transform: scale(1.1); }
 
     /* ロード画面 */
@@ -277,18 +235,36 @@
        ★レスポンシブ対応
        ========================================= */
     
-    /* ノートパソコン (901px〜1400px) */
+    /* ★修正：ノートパソコン専用調整（901px〜1400px） */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
-        :root { --icon-size: clamp(50px, 6vw, 110px); }
-        .speech-bubble { padding: 8px 15px; font-size: 12px; top: -40px; right: calc(var(--icon-size) - 20px); border-radius: 20px; }
-        .speech-bubble::after { bottom: -10px; right: 25px; border-width: 10px 0 0 10px; }
-        .logo { font-size: clamp(50px, 5vw, 80px); } .sub-logo { font-size: 16px; margin-left: 20px; }
-        .catch-copy { font-size: clamp(40px, 5vw, 70px); bottom: 30px; right: 30px; }
-        .header-nav { margin-top: 5px; }
+        /* アイコンサイズ：さらに小さく */
+        :root {
+            --icon-size: clamp(50px, 6vw, 110px);
+        }
+        
+        /* 吹き出し：さらに小さく・位置調整 */
+        .speech-bubble {
+            padding: 10px 18px; 
+            font-size: 13px;
+            top: -40px;
+            right: calc(var(--icon-size) - 20px);
+            border-radius: 20px;
+        }
+        .speech-bubble::after {
+            bottom: -8px; right: 25px;
+            border-width: 8px 0 0 8px;
+        }
+
+        /* タイトルなどはPCの縮小設定（0.8倍）を継承しつつ、このサイズ帯で見やすく */
+        .logo { font-size: clamp(50px, 6vw, 87px); }
+        .sub-logo { font-size: 16px; margin-left: 20px; }
+        .catch-copy { font-size: clamp(40px, 6vw, 80px); bottom: 30px; right: 30px; }
+        
+        .header-nav { margin-top: 10px; }
         .frame-header { padding-right: calc(var(--icon-size) + 40px); }
     }
 
-    /* スマホ (900px以下) */
+    /* スマホ（900px以下） */
     @media screen and (max-width: 900px) {
         :root { --icon-size: 80px; --frame-radius: 50px; }
         .bg-character { background-position: 100% center; }
@@ -302,8 +278,7 @@
         .speech-bubble { display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px; }
         .speech-bubble::after {
             top: auto; bottom: -12px; left: 50%; right: auto;
-            border-width: 12px 8px 0 8px; 
-            border-color: #fff transparent transparent transparent;
+            border-width: 12px 6px 0 6px; border-color: #fff transparent transparent transparent;
             transform: translateX(-50%);
         }
         .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; }
@@ -327,12 +302,8 @@
         #bg-slideshow { gap: 0; }
     }
 
-    /* メニューオープン時のスタイル */
-    body.menu-open .icon-container { 
-        width: 100%; height: 50%; 
-        border-bottom-left-radius: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); border-top-left-radius: calc(var(--frame-radius) - 3px); 
-        border-left: none; border-bottom: 2px solid #fff; z-index: 40; 
-    }
+    /* メニューオープン時 */
+    body.menu-open .icon-container { width: 100%; height: 50%; border-bottom-left-radius: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); border-top-left-radius: calc(var(--frame-radius) - 3px); border-left: none; border-bottom: 2px solid #fff; z-index: 40; }
     body.menu-open .character-name { opacity: 1; }
     body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
     body.menu-open .catch-copy, body.menu-open .speech-bubble, body.menu-open .logo, body.menu-open .sub-logo, body.menu-open .scroll-down { opacity: 0 !important; pointer-events: none; }
@@ -556,7 +527,6 @@
                                 character.style.transition = "opacity 1.5s";
                             }
                             startTypewriter();
-                            
                             if (typeof gsap !== 'undefined') {
                                 gsap.fromTo(".catch-copy", 
                                     { opacity: 0, y: 20 }, 
@@ -593,12 +563,17 @@
         }
 
         function typeNextPhrase() {
-            currentPhrase = getNextPhrase(); charIndex = 0; typingTextSpan.textContent = ""; typeLoop();
+            currentPhrase = getNextPhrase();
+            charIndex = 0;
+            typingTextSpan.textContent = ""; 
+            typeLoop();
         }
 
         function typeLoop() {
             if (charIndex < currentPhrase.length) {
-                typingTextSpan.textContent += currentPhrase.charAt(charIndex); charIndex++; setTimeout(typeLoop, 40);
+                typingTextSpan.textContent += currentPhrase.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeLoop, 40);
             } else {
                 setTimeout(typeNextPhrase, 6000);
             }
