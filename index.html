@@ -20,7 +20,7 @@
 
     /* --- 変数定義（デスクトップPC基準） --- */
     :root {
-        /* デスクトップ用（1401px以上）は大きく */
+        /* デスクトップ用（1601px以上）は大きく */
         --icon-size: clamp(100px, 15vw, 260px);
         --frame-radius: 30px;
     }
@@ -247,34 +247,34 @@
        ★レスポンシブ対応
        ========================================= */
     
-    /* ノートパソコン専用調整（901px〜1400px） */
-    /* ここでサイズをしっかり小さくして、巨大化を防ぐ */
-    @media screen and (min-width: 901px) and (max-width: 1400px) {
-        /* アイコンサイズ：0.6倍程度（110px以下） */
+    /* ★修正：ノートパソコン専用調整（901px〜1600pxまで拡大） */
+    /* 画面幅1600px以下のノートPC環境はすべてコンパクト表示にする */
+    @media screen and (min-width: 901px) and (max-width: 1600px) {
+        /* アイコンサイズ：最大でも100px程度に制限 */
         :root {
-            --icon-size: clamp(50px, 7vw, 110px);
+            --icon-size: clamp(50px, 6vw, 100px);
         }
         
         /* 吹き出し：小さく、位置調整 */
         .speech-bubble {
-            padding: 10px 20px; 
-            font-size: 12px;
-            top: -40px;
-            right: calc(var(--icon-size) - 20px);
+            padding: 8px 15px; 
+            font-size: 11px; /* 文字サイズ縮小 */
+            top: -35px; 
+            right: calc(var(--icon-size) - 15px);
             border-radius: 20px;
         }
         .speech-bubble::after {
-            bottom: -8px; right: 25px;
+            bottom: -8px; right: 20px;
             border-width: 8px 0 0 8px;
         }
 
-        /* タイトル：PC版設定（巨大）を上書きしてノートPCサイズに */
-        .logo { font-size: clamp(40px, 5vw, 70px); }
-        .sub-logo { font-size: 14px; margin-left: 15px; }
-        .catch-copy { font-size: clamp(36px, 5vw, 60px); bottom: 30px; right: 30px; }
+        /* タイトル：ノートPC用サイズ */
+        .logo { font-size: clamp(45px, 5vw, 80px); }
+        .sub-logo { font-size: 15px; margin-left: 15px; }
+        .catch-copy { font-size: clamp(36px, 5vw, 65px); bottom: 30px; right: 30px; }
         
         .header-nav { margin-top: 5px; }
-        .frame-header { padding-right: calc(var(--icon-size) + 40px); }
+        .frame-header { padding-right: calc(var(--icon-size) + 30px); }
     }
 
     /* スマホ（900px以下） */
