@@ -248,33 +248,33 @@
        ========================================= */
     
     /* ★修正：ノートパソコン専用調整（901px〜1600pxまで拡大） */
-    /* 画面幅1600px以下のノートPC環境はすべてコンパクト表示にする */
     @media screen and (min-width: 901px) and (max-width: 1600px) {
-        /* アイコンサイズ：最大でも100px程度に制限 */
+        /* アイコンサイズ：0.6倍（6vw） */
         :root {
-            --icon-size: clamp(50px, 6vw, 100px);
+            --icon-size: clamp(50px, 6vw, 110px);
         }
         
-        /* 吹き出し：小さく、位置調整 */
+        /* 吹き出し：コンパクトに */
         .speech-bubble {
             padding: 8px 15px; 
-            font-size: 11px; /* 文字サイズ縮小 */
-            top: -35px; 
-            right: calc(var(--icon-size) - 15px);
+            font-size: 12px;
+            /* ★修正：位置を少し下げる (-35px -> -20px) */
+            top: -20px; 
+            right: calc(var(--icon-size) - 20px);
             border-radius: 20px;
         }
         .speech-bubble::after {
-            bottom: -8px; right: 20px;
+            bottom: -8px; right: 25px;
             border-width: 8px 0 0 8px;
         }
 
-        /* タイトル：ノートPC用サイズ */
-        .logo { font-size: clamp(45px, 5vw, 80px); }
-        .sub-logo { font-size: 15px; margin-left: 15px; }
-        .catch-copy { font-size: clamp(36px, 5vw, 65px); bottom: 30px; right: 30px; }
+        /* タイトル：PC版の縮小設定を維持 */
+        .logo { font-size: clamp(50px, 5vw, 80px); }
+        .sub-logo { font-size: 16px; margin-left: 20px; }
+        .catch-copy { font-size: clamp(40px, 5vw, 70px); bottom: 30px; right: 30px; }
         
         .header-nav { margin-top: 5px; }
-        .frame-header { padding-right: calc(var(--icon-size) + 30px); }
+        .frame-header { padding-right: calc(var(--icon-size) + 40px); }
     }
 
     /* スマホ（900px以下） */
