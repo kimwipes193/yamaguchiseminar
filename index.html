@@ -236,7 +236,15 @@
     .loading-border-draw.expand { mask: none; -webkit-mask: none; width: 90vw; height: 90vh; border-radius: 30px; border-width: 3px; }
     .loading-content { position: relative; z-index: 2; text-align: center; transition: opacity 0.5s; } .loading-content.hidden { opacity: 0; }
     .loading-title { font-family: 'Senobi Gothic', sans-serif; font-size: 40px; } .loading-subtitle { font-family: 'Barmo', sans-serif; font-size: 14px; }
-    .loading-status-box { margin-top: 30px; font-family: 'Roboto Mono', monospace; font-size: 18px; display: flex; gap: 10px; justify-content: center; }
+    
+    /* ★修正：ロード画面の文字を Dela Gothic One に変更 */
+    .loading-status-box { 
+        margin-top: 30px; 
+        font-family: 'Dela Gothic One', sans-serif; /* カッコイイフォント */
+        font-size: 20px; 
+        letter-spacing: 0.1em;
+        display: flex; gap: 10px; justify-content: center; 
+    }
     .blinking-cursor { width: 10px; height: 18px; background-color: #fff; animation: blink 1s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
@@ -248,6 +256,7 @@
        ========================================= */
     
     /* ★修正：ノートパソコン専用調整（901px〜1600pxまで拡大） */
+    /* 1600px以下のPCはすべてコンパクト表示にする */
     @media screen and (min-width: 901px) and (max-width: 1600px) {
         /* アイコンサイズ：0.6倍（6vw） */
         :root {
@@ -258,8 +267,8 @@
         .speech-bubble {
             padding: 8px 15px; 
             font-size: 12px;
-            /* ★修正：位置を少し下げる (-35px -> -20px) */
-            top: -20px; 
+            /* 位置調整：アイコンに合わせて下げる */
+            top: -25px; 
             right: calc(var(--icon-size) - 20px);
             border-radius: 20px;
         }
