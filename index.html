@@ -16,7 +16,7 @@
     @font-face { font-family: 'Dela Gothic One'; src: url('fonts/DelaGothicOne-Regular.woff2') format('woff2'); }
     @font-face { font-family: 'CHILK'; src: url('fonts/CHILK___.woff2') format('woff2'); }
 
-    /* --- 変数定義（基本はデスクトップPC用） --- */
+    /* --- 変数定義（デスクトップPC基準） --- */
     :root {
         --icon-size: clamp(100px, 15vw, 260px);
         --frame-radius: 30px;
@@ -104,15 +104,16 @@
     .icon-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; will-change: transform; }
     .icon-container:hover .icon-image { transform: scale(1.1); }
 
-    /* キャラクター名 */
+    /* キャラクター名（ニーナ） */
     .character-name {
-        position: absolute; bottom: 10px; right: 20px;
+        position: absolute;
+        bottom: 10px; right: 20px;
         font-family: 'CHILK', sans-serif; font-size: 40px; color: #fff;
-        text-shadow: 2px 2px 0px #FF4291;
+        text-shadow: 2px 2px 0px #FF4291, -1px -1px 0 #FF4291; 
         opacity: 0; pointer-events: none; transition: opacity 0.3s ease 0.3s; z-index: 60;
     }
 
-    /* 吹き出し（PCデフォルト） */
+    /* 吹き出し（デスクトップPC用） */
     .speech-bubble {
         position: absolute; 
         top: -60px; right: calc(var(--icon-size) - 40px);
@@ -146,15 +147,9 @@
     }
     .header-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
     
-    .logo { 
-        font-size: max(87px, 7.5vw); 
-        margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; 
-    }
-    .sub-logo { 
-        font-family: 'Barmo', sans-serif; 
-        font-size: max(24px, 1.6vw); 
-        margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; 
-    }
+    /* PC版 */
+    .logo { font-size: max(87px, 7.5vw); margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); margin-left: -0.08em; letter-spacing: -0.05em; }
+    .sub-logo { font-family: 'Barmo', sans-serif; font-size: max(24px, 1.6vw); margin-top: 5px; letter-spacing: 0.1em; margin-left: 45px; }
     
     .header-nav { margin-top: 35px; }
     .header-nav ul { display: flex; gap: 2vw; list-style: none; margin: 0; padding: 0; }
@@ -194,14 +189,15 @@
     .catch-copy p { margin: 0; }
     .catch-copy .highlight { font-style: italic; margin-right: 0.2em; display: inline-block; opacity: 0; }
 
-    /* ターミナル */
+    /* --- ターミナル（メニュー画面・スマホ用） --- */
     .terminal-container {
-        display: none; position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+        display: none; 
+        position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
         background-color: rgba(255, 66, 145, 0.95); color: #fff; 
         padding: 20px; box-sizing: border-box; 
         border-bottom-left-radius: calc(var(--frame-radius) - 3px); 
         border-bottom-right-radius: calc(var(--frame-radius) - 3px); 
-        z-index: 45; overflow-y: auto; pointer-events: auto; flex-direction: column;
+        z-index: 55; overflow-y: auto; pointer-events: auto; flex-direction: column;
     }
     .terminal-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; }
     .terminal-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; } .red { background-color: #ff5f56; } .yellow { background-color: #ffbd2e; } .green { background-color: #27c93f; }
@@ -235,36 +231,32 @@
        ★レスポンシブ対応
        ========================================= */
     
-    /* ★修正：ノートパソコン専用調整（901px〜1400px） */
+    /* ★修正：ノートパソコン専用調整 (901px〜1400px) - 0.6倍に縮小 */
     @media screen and (min-width: 901px) and (max-width: 1400px) {
-        /* アイコンサイズ：さらに小さく */
         :root {
-            --icon-size: clamp(50px, 6vw, 110px);
+            --icon-size: clamp(50px, 7vw, 110px);
         }
-        
-        /* 吹き出し：さらに小さく・位置調整 */
         .speech-bubble {
-            padding: 10px 18px; 
-            font-size: 13px;
-            top: -40px;
-            right: calc(var(--icon-size) - 20px);
+            padding: 10px 20px; 
+            font-size: 12px; /* 小さく */
+            top: -40px; /* 位置を下げる */
+            right: calc(var(--icon-size) - 30px);
             border-radius: 20px;
         }
         .speech-bubble::after {
             bottom: -8px; right: 25px;
-            border-width: 8px 0 0 8px;
+            border-width: 8px 0 0 8px; /* 尻尾も小さく */
         }
 
-        /* タイトルなどはPCの縮小設定（0.8倍）を継承しつつ、このサイズ帯で見やすく */
-        .logo { font-size: clamp(50px, 6vw, 87px); }
+        /* タイトルやキャッチコピーはそのまま維持 */
+        .logo { font-size: clamp(50px, 5vw, 80px); }
         .sub-logo { font-size: 16px; margin-left: 20px; }
-        .catch-copy { font-size: clamp(40px, 6vw, 80px); bottom: 30px; right: 30px; }
-        
-        .header-nav { margin-top: 10px; }
+        .catch-copy { font-size: clamp(40px, 5vw, 70px); bottom: 30px; right: 30px; }
+        .header-nav { margin-top: 5px; }
         .frame-header { padding-right: calc(var(--icon-size) + 40px); }
     }
 
-    /* スマホ（900px以下） */
+    /* スマホ (900px以下) - こちらは変更なし */
     @media screen and (max-width: 900px) {
         :root { --icon-size: 80px; --frame-radius: 50px; }
         .bg-character { background-position: 100% center; }
@@ -274,13 +266,18 @@
         .logo { font-size: 50px; letter-spacing: -0.1em; } .sub-logo { font-size: 16px; margin-left: 0; }
         .header-nav { display: none; } 
         .icon-container { width: 80px; height: 80px; top: 0; right: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); }
+        
+        /* ハンバーガーボタン */
         .hamburger-btn { display: flex; border-radius: 30px 0 calc(var(--frame-radius) - 3px) 0; }
+
+        /* 吹き出し */
         .speech-bubble { display: flex; top: -25px; right: 20px; padding: 8px 15px; font-size: 10px; }
         .speech-bubble::after {
             top: auto; bottom: -12px; left: 50%; right: auto;
-            border-width: 12px 6px 0 6px; border-color: #fff transparent transparent transparent;
+            border-width: 12px 8px 0 8px; border-color: #fff transparent transparent transparent;
             transform: translateX(-50%);
         }
+
         .catch-copy { font-size: 10.8vw; bottom: 30px; right: 20px; }
         .loading-container { width: 300px; height: 200px; } .loading-title { font-size: 28px; }
         .scroll-down { border-radius: 0 30px 0 calc(var(--frame-radius) - 3px); }
@@ -302,7 +299,7 @@
         #bg-slideshow { gap: 0; }
     }
 
-    /* メニューオープン時 */
+    /* メニューオープン時のスタイル */
     body.menu-open .icon-container { width: 100%; height: 50%; border-bottom-left-radius: 0; border-top-right-radius: calc(var(--frame-radius) - 3px); border-top-left-radius: calc(var(--frame-radius) - 3px); border-left: none; border-bottom: 2px solid #fff; z-index: 40; }
     body.menu-open .character-name { opacity: 1; }
     body.menu-open .header-nav { opacity: 1; pointer-events: auto; visibility: visible; }
@@ -527,6 +524,7 @@
                                 character.style.transition = "opacity 1.5s";
                             }
                             startTypewriter();
+                            
                             if (typeof gsap !== 'undefined') {
                                 gsap.fromTo(".catch-copy", 
                                     { opacity: 0, y: 20 }, 
@@ -563,17 +561,12 @@
         }
 
         function typeNextPhrase() {
-            currentPhrase = getNextPhrase();
-            charIndex = 0;
-            typingTextSpan.textContent = ""; 
-            typeLoop();
+            currentPhrase = getNextPhrase(); charIndex = 0; typingTextSpan.textContent = ""; typeLoop();
         }
 
         function typeLoop() {
             if (charIndex < currentPhrase.length) {
-                typingTextSpan.textContent += currentPhrase.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeLoop, 40);
+                typingTextSpan.textContent += currentPhrase.charAt(charIndex); charIndex++; setTimeout(typeLoop, 40);
             } else {
                 setTimeout(typeNextPhrase, 6000);
             }
